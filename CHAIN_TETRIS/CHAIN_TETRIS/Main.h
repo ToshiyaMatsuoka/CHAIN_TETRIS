@@ -88,6 +88,17 @@ enum TEXTURE
 	TEXMAX
 };
 
+enum FONT
+{
+	MAIN_FONT,
+	SUBBOARD_FONT,
+	Score_FONT,
+	GO_FONT,
+	PAUSE_FONT,
+	PAUSE2_FONT,
+	ResultScore_FONT,
+	FONTMAX
+};
 enum SCENE {
 	STATE_TEAMLOGO,
 	STATE_TITLE,
@@ -121,13 +132,7 @@ extern LPDIRECTINPUT8 g_pDinput ;
 extern LPDIRECTINPUTDEVICE8 g_pKeyDevice ;
 extern LPDIRECTINPUTDEVICE8 g_pDIMouse;
 extern D3DPRESENT_PARAMETERS g_D3dPresentParameters;
-extern LPD3DXFONT	g_pFont;			//Font
-extern LPD3DXFONT	g_pSUBBOARDFont;
-extern LPD3DXFONT	g_pScoreFont;
-extern LPD3DXFONT	g_pGOFont;
-extern LPD3DXFONT	g_pPAUSEFont;
-extern LPD3DXFONT	g_pPAUSEFontB;
-extern LPD3DXFONT pResultScoreFont;
+extern LPD3DXFONT	g_pFont[FONTMAX];			//Font
 
 
 extern LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);

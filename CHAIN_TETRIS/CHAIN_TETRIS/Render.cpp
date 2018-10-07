@@ -665,7 +665,7 @@ void ResultRender(void){
 
 	
 	sprintf_s(Score, 255, "%d", NowScorePoint);
-	pResultScoreFont->DrawText(
+	g_pFont[ResultScore_FONT]->DrawText(
 		NULL,							// NULL
 		Score,				// 描画テキスト
 		-1,								// 全て表示
@@ -749,7 +749,7 @@ void TEXTWRITTEN() {
 
 
 
-	g_pSUBBOARDFont->DrawText(
+	g_pFont[SUBBOARD_FONT]->DrawText(
 		NULL,							// NULL
 		("HOLD"),					// 描画テキスト
 		-1,								// 全て表示
@@ -757,7 +757,7 @@ void TEXTWRITTEN() {
 		DT_LEFT,						// 左寄せ
 		D3DCOLOR_ARGB(0xff, 0xff, 0xff, 0xff)	// 白色
 	);
-	g_pSUBBOARDFont->DrawText(
+	g_pFont[SUBBOARD_FONT]->DrawText(
 		NULL,							// NULL
 		("NEXT"),					// 描画テキスト
 		-1,								// 全て表示
@@ -765,7 +765,7 @@ void TEXTWRITTEN() {
 		DT_LEFT,						// 左寄せ
 		D3DCOLOR_ARGB(0xff, 0xff, 0xff, 0xff)	// 白色
 	);
-	g_pSUBBOARDFont->DrawText(
+	g_pFont[SUBBOARD_FONT]->DrawText(
 		NULL,							// NULL
 		("Second"),					// 描画テキスト
 		-1,								// 全て表示
@@ -773,7 +773,7 @@ void TEXTWRITTEN() {
 		DT_LEFT,						// 左寄せ
 		D3DCOLOR_ARGB(0xff, 0xff, 0xff, 0xff)// 白色
 	);
-	g_pSUBBOARDFont->DrawText(
+	g_pFont[SUBBOARD_FONT]->DrawText(
 		NULL,							// NULL
 		("Third"),					// 描画テキスト
 		-1,								// 全て表示
@@ -781,7 +781,7 @@ void TEXTWRITTEN() {
 		DT_LEFT,						// 左寄せ
 		D3DCOLOR_ARGB(0xff, 0xff, 0xff, 0xff)// 白色
 	);
-	g_pSUBBOARDFont->DrawText(
+	g_pFont[SUBBOARD_FONT]->DrawText(
 		NULL,							// NULL
 		("SCORE"),					// 描画テキスト
 		-1,								// 全て表示
@@ -792,7 +792,7 @@ void TEXTWRITTEN() {
 
 
 	
-	g_pScoreFont->DrawText(
+	g_pFont[Score_FONT]->DrawText(
 		NULL,							// NULL
 		Score,					// 描画テキスト
 		-1,								// 全て表示
@@ -802,7 +802,7 @@ void TEXTWRITTEN() {
 	);
 	if (GameStop)
 	{
-		g_pPAUSEFont->DrawText(
+		g_pFont[PAUSE_FONT]->DrawText(
 			NULL,							// NULL
 			("PAUSE"),					// 描画テキスト
 			-1,								// 全て表示
@@ -811,7 +811,7 @@ void TEXTWRITTEN() {
 			D3DCOLOR_ARGB(0xff, 0xff, 0xff, 0xff)// 白色
 		);
 
-		g_pPAUSEFontB->DrawText(
+		g_pFont[PAUSE2_FONT]->DrawText(
 			NULL,							// NULL
 			("PUSH Enter or Start"),					// 描画テキスト
 			-1,								// 全て表示
@@ -822,7 +822,7 @@ void TEXTWRITTEN() {
 	}
 
 	if (GameOver) {
-		g_pGOFont->DrawText(
+		g_pFont[GO_FONT]->DrawText(
 			NULL,							// NULL
 			("GAME OVER"),					// 描画テキスト
 			-1,								// 全て表示
@@ -832,7 +832,7 @@ void TEXTWRITTEN() {
 		);
 	}
 	if (g_RiseCOUNTER&&ChainEffectOn) {
-		g_pGOFont->DrawText(
+		g_pFont[GO_FONT]->DrawText(
 			NULL,							// NULL
 			chaincnt,		// 描画テキスト
 			-1,								// 全て表示
@@ -861,7 +861,7 @@ void TEXTWRITTEN() {
 			};
 
 
-			g_pSUBBOARDFont->DrawText(
+			g_pFont[SUBBOARD_FONT]->DrawText(
 				NULL,							// NULL
 				debug,							// 描画テキスト
 				-1,								// 全て表示
@@ -877,7 +877,7 @@ void TEXTWRITTEN() {
 	1200,
 	700
 	};
-	g_pFont->DrawText(
+	g_pFont[MAIN_FONT]->DrawText(
 		NULL,							// NULL
 		chaincnt,							// 描画テキスト
 		-1,								// 全て表示

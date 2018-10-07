@@ -28,13 +28,7 @@ LPDIRECTINPUT8		  g_pDinput = NULL;
 LPDIRECTINPUTDEVICE8  g_pKeyDevice = NULL;
 LPDIRECTINPUTDEVICE8  g_pDIMouse = NULL;
 D3DPRESENT_PARAMETERS g_D3dPresentParameters;
-LPD3DXFONT	g_pFont;			//Font
-LPD3DXFONT	g_pSUBBOARDFont;
-LPD3DXFONT	g_pScoreFont;
-LPD3DXFONT	g_pGOFont;
-LPD3DXFONT	g_pPAUSEFont;
-LPD3DXFONT	g_pPAUSEFontB;
-LPD3DXFONT pResultScoreFont;
+LPD3DXFONT	g_pFont[FONTMAX];			//Font
 
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -65,6 +59,9 @@ void FreeDx()
 		SAFE_RELEASE(g_pTexture[i]);
 		
 	}
+	for (int i = 0; i < FONTMAX; i++) {
+		SAFE_RELEASE(g_pFont[i]);
+	}
 	if (g_pKeyDevice)
 	{
 		g_pKeyDevice->Unacquire();
@@ -76,13 +73,6 @@ void FreeDx()
 	SAFE_RELEASE(g_pDirect3D);
 	SAFE_RELEASE(g_pD3Device);
 
-	SAFE_RELEASE(g_pFont);
-	SAFE_RELEASE(g_pSUBBOARDFont);
-	SAFE_RELEASE(g_pScoreFont);
-	SAFE_RELEASE(g_pGOFont);
-	SAFE_RELEASE(g_pPAUSEFont);
-	SAFE_RELEASE(g_pPAUSEFontB);
-	SAFE_RELEASE(pResultScoreFont);
 }
 
 
@@ -160,21 +150,21 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE hInstance, LPSTR szStr, INT iCmdSh
 	g_D3dPresentParameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
 	g_D3dPresentParameters.Windowed = TRUE;
 
-	ZeroMemory(&g_D3dPresentParameters, sizeof(D3DPRESENT_PARAMETERS));
-	g_D3dPresentParameters.BackBufferWidth = WIDTH;
-	g_D3dPresentParameters.BackBufferHeight = HEIGHT;
-	g_D3dPresentParameters.BackBufferFormat = D3DFMT_X8R8G8B8;
-	g_D3dPresentParameters.BackBufferCount = 1;
-	g_D3dPresentParameters.MultiSampleType = D3DMULTISAMPLE_NONE;
-	g_D3dPresentParameters.MultiSampleQuality = 0;
-	g_D3dPresentParameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
-	g_D3dPresentParameters.hDeviceWindow = hWnd;
-	g_D3dPresentParameters.Windowed = FALSE;
-	g_D3dPresentParameters.EnableAutoDepthStencil = FALSE;
-	g_D3dPresentParameters.AutoDepthStencilFormat = D3DFMT_D24S8;
-	g_D3dPresentParameters.Flags = 0;
-	g_D3dPresentParameters.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
-	g_D3dPresentParameters.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
+	//ZeroMemory(&g_D3dPresentParameters, sizeof(D3DPRESENT_PARAMETERS));
+	//g_D3dPresentParameters.BackBufferWidth = WIDTH;
+	//g_D3dPresentParameters.BackBufferHeight = HEIGHT;
+	//g_D3dPresentParameters.BackBufferFormat = D3DFMT_X8R8G8B8;
+	//g_D3dPresentParameters.BackBufferCount = 1;
+	//g_D3dPresentParameters.MultiSampleType = D3DMULTISAMPLE_NONE;
+	//g_D3dPresentParameters.MultiSampleQuality = 0;
+	//g_D3dPresentParameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
+	//g_D3dPresentParameters.hDeviceWindow = hWnd;
+	//g_D3dPresentParameters.Windowed = FALSE;
+	//g_D3dPresentParameters.EnableAutoDepthStencil = FALSE;
+	//g_D3dPresentParameters.AutoDepthStencilFormat = D3DFMT_D24S8;
+	//g_D3dPresentParameters.Flags = 0;
+	//g_D3dPresentParameters.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
+	//g_D3dPresentParameters.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
 
 	//デバイスを作る
 	g_pDirect3D->CreateDevice(
@@ -319,7 +309,7 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE hInstance, LPSTR szStr, INT iCmdSh
 		DEFAULT_QUALITY,			// 文字品質を重視
 		FIXED_PITCH | FF_SCRIPT,	// ピッチとファミリ
 		TEXT("VENUS RISING"),		// フォント名
-		&g_pFont);					// ID3DXFontポインタ
+		&g_pFont[MAIN_FONT]);					// ID3DXFontポインタ
 
 	D3DXCreateFont(
 		g_pD3Device,
@@ -333,7 +323,7 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE hInstance, LPSTR szStr, INT iCmdSh
 		DEFAULT_QUALITY,
 		FIXED_PITCH | FF_SCRIPT,
 		TEXT("VENUS RISING"),
-		&g_pSUBBOARDFont);
+		&g_pFont[SUBBOARD_FONT]);
 
 	D3DXCreateFont(
 		g_pD3Device,				// Direct3Dデバイス
@@ -347,7 +337,7 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE hInstance, LPSTR szStr, INT iCmdSh
 		DEFAULT_QUALITY,			// 文字品質を重視
 		FIXED_PITCH | FF_SCRIPT,	// ピッチとファミリ
 		TEXT("venus rising"),		// フォント名
-		&g_pScoreFont);					// ID3DXFontポインタ
+		&g_pFont[Score_FONT]);					// ID3DXFontポインタ
 
 	D3DXCreateFont(
 		g_pD3Device,				// Direct3Dデバイス
@@ -361,7 +351,7 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE hInstance, LPSTR szStr, INT iCmdSh
 		DEFAULT_QUALITY,			// 文字品質を重視
 		FIXED_PITCH | FF_SCRIPT,	// ピッチとファミリ
 		TEXT("VENUS RISING"),		// フォント名
-		&g_pGOFont);					// ID3DXFontポインタ
+		&g_pFont[GO_FONT]);					// ID3DXFontポインタ
 	D3DXCreateFont(
 		g_pD3Device,
 		150,
@@ -374,7 +364,7 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE hInstance, LPSTR szStr, INT iCmdSh
 		DEFAULT_QUALITY,
 		FIXED_PITCH | FF_SCRIPT,
 		TEXT("VENUS RISING"),
-		&g_pPAUSEFont);
+		&g_pFont[PAUSE_FONT]);
 
 	D3DXCreateFont(
 		g_pD3Device,
@@ -388,7 +378,7 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE hInstance, LPSTR szStr, INT iCmdSh
 		DEFAULT_QUALITY,
 		FIXED_PITCH | FF_SCRIPT,
 		TEXT("VENUS RISING"),
-		&g_pPAUSEFontB);
+		&g_pFont[PAUSE2_FONT]);
 	D3DXCreateFont(
 		g_pD3Device,				// Direct3Dデバイス
 		80,						// 高さ
@@ -401,7 +391,7 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE hInstance, LPSTR szStr, INT iCmdSh
 		DEFAULT_QUALITY,			// 文字品質を重視
 		FIXED_PITCH | FF_SCRIPT,	// ピッチとファミリ
 		TEXT("venus rising"),		// フォント名
-		&pResultScoreFont);
+		&g_pFont[ResultScore_FONT]);
 
 	DWORD SyncOld = timeGetTime();	//	システム時間を取得
 	DWORD SyncNow;
@@ -432,9 +422,9 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE hInstance, LPSTR szStr, INT iCmdSh
 					TeamLogoRender();
 					break;
 				case STATE_TITLE:
+					msg.message = EndGame();
 					Control();
 					Render();
-					msg.message = EndGame();
 					break;
 				case STATE_MAIN:
 					if (!GameOver) {
@@ -471,14 +461,9 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE hInstance, LPSTR szStr, INT iCmdSh
 
 int EndGame() {
 
-	HRESULT hr = g_pKeyDevice->Acquire();
-	if ((hr == DI_OK) || (hr == S_FALSE)) {
-		BYTE diks[256];
-		g_pKeyDevice->GetDeviceState(sizeof(diks), &diks);
-
-		if (diks[DIK_ESCAPE] & 0x80) {
-			return WM_QUIT;
-		}
-		return WM_NULL;
+	if (KeyRelease == GetKeyBoardState(DIK_ESCAPE)) {
+		return WM_QUIT;
 	}
+	return WM_NULL;
+
 }

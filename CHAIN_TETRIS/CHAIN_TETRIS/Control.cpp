@@ -19,15 +19,16 @@ bool isRight, isLeft, isDown, isRotateR, isRotateL, isPause, isHold, isDrop;
 bool GameStop = false;
 bool g_moveup = true;
 int NowScorePoint;
+BYTE KeyOldState[256];
 
 
 void Control() {
 
 	static int keyStroke[10];
-	if (g_scene == STATE_TITLE|| g_scene == STATE_RESULT) {
+	if (g_scene == STATE_TITLE || g_scene == STATE_RESULT) {
 		keyStroke[0]++;
 	}
-	bool PushEnter=false;
+	bool PushEnter = false;
 	//XInputデバイス操作
 	GetControl();
 
@@ -69,7 +70,7 @@ void Control() {
 	{
 		for (int i = 0; i < 4; i++)
 		{
-			
+
 		}
 	}
 	if (!GetAnalogL(ANALOGUP))
@@ -124,69 +125,64 @@ void Control() {
 
 
 
-	//キーボードコントロール
-	HRESULT hr = g_pKeyDevice->Acquire();
-	if ((hr == DI_OK) || (hr == S_FALSE)) {
-		BYTE diks[256];
-		g_pKeyDevice->GetDeviceState(sizeof(diks), &diks);
-
-		if (diks[DIK_LEFT] & 0x80) {
-			isLeft = true;
-		}
-		if (diks[DIK_RIGHT] & 0x80) {
-			isRight = true;
-		}
-		if (diks[DIK_UP] & 0x80) {
-			isRotateR = true;
-		}
-		if (diks[DIK_DOWN] & 0x80) {
-			isDown = true;
-		}
-		if (diks[DIK_SPACE] & 0x80) {
-			isDrop = true;
-		}
-		if (diks[DIK_C] & 0x80) {
-			isHold = true;
-		}
-		if (diks[DIK_Z] & 0x80) {
-			isRotateL = true;
-		}
-		if (diks[DIK_ESCAPE] & 0x80) {
-			if (g_scene == STATE_RESULT)
-			{
-				g_scene = STATE_TITLE;
-			}
-			if (g_scene == STATE_MAIN) {
-				isPause = true;
-			}
-		}
-		if ((diks[DIK_RETURN] & 0x80) || (diks[DIK_NUMPADENTER] & 0x80)) {
-			PushEnter = true;
-			//diks[DIK_RETURN] = NULL;
-		}
-
-		if (PushEnter) {
-			
-			if (g_scene == STATE_TITLE) {
-				g_scene = STATE_TUTORIAL;
-				PushEnter = false;
-			}
-			if (g_scene == STATE_RESULT) {
-				g_scene = STATE_MAIN;
-				PushEnter = false;
-			}
-			if (g_scene == STATE_MAIN) {
-				PushEnter = false;
-				GameStop = false;
-			}
-			keyStroke[0] = 0;
-		}
-		else PushEnter = false;
+	if (GetKeyBoardState(DIK_LEFT)) {
+		isLeft = true;
 	}
+	if (GetKeyBoardState(DIK_RIGHT)) {
+		isRight = true;
+	}
+	if (GetKeyBoardState(DIK_UP)) {
+		isRotateR = true;
+	}
+	if (GetKeyBoardState(DIK_DOWN)) {
+		isDown = true;
+	}
+	if (GetKeyBoardState(DIK_SPACE)) {
+		isDrop = true;
+	}
+	if (GetKeyBoardState(DIK_C)) {
+		isHold = true;
+	}
+	if (GetKeyBoardState(DIK_Z)) {
+		isRotateL = true;
+	}
+	if (KeyRelease==GetKeyBoardState(DIK_ESCAPE)) {
+		if (g_scene == STATE_RESULT)
+		{
+			g_scene = STATE_TITLE;
+			KeyOldState[DIK_ESCAPE] = KeyOff;
+		}
+		if (g_scene == STATE_MAIN) {
+			isPause = true;
+		}
+	}
+	if ((GetKeyBoardState(DIK_RETURN)) || (GetKeyBoardState(DIK_NUMPADENTER))) {
+		PushEnter = true;
+		//GetKeyBoardState(DIK_RETURN] = NULL;
+	}
+
+	if (PushEnter) {
+
+		if (g_scene == STATE_TITLE) {
+			g_scene = STATE_TUTORIAL;
+			PushEnter = false;
+		}
+		if (g_scene == STATE_RESULT) {
+			g_scene = STATE_MAIN;
+			PushEnter = false;
+		}
+		if (g_scene == STATE_MAIN) {
+			PushEnter = false;
+			GameStop = false;
+		}
+		keyStroke[0] = 0;
+	}
+	else PushEnter = false;
+
 	if (!GameStop) {
 		//テトリミノ動作
 		if (isRight) {
-			
+
 			keyStroke[RIGHT]++;
 			if (keyStroke[RIGHT] > KEY_RESTAIN) {
 				isRight = false;
@@ -194,7 +190,7 @@ void Control() {
 			}
 		}
 		if (isLeft) {
-			
+
 			keyStroke[LEFT]++;
 			if (keyStroke[LEFT] > KEY_RESTAIN) {
 				isLeft = false;
@@ -231,7 +227,7 @@ void Control() {
 			if (keyStroke[DROP] > KEY_RESTAIN) {
 				isDrop = false;
 				keyStroke[DROP] = 0;
-				
+
 			}
 		}
 		//if (isHold) {
@@ -240,14 +236,14 @@ void Control() {
 	}
 
 	if (isPause) {
-	
+
 		GameStop = true;
 		isPause = false;
 	}
 	if (GameOver) {
 		static int GameOverCnt = 0;
 		GameOverCnt++;
-		if(GameOverCnt>SWITCH_RESULT) {
+		if (GameOverCnt > SWITCH_RESULT) {
 			g_scene = STATE_RESULT;
 			GameOverCnt = 0;
 		}
@@ -284,4 +280,41 @@ void ResultControl(){
 		NowScorePoint = g_ScorePoint;
 	}
 
+}
+
+int GetKeyBoardState(int KeyName) {
+	HRESULT hr = g_pKeyDevice->Acquire();
+	if ((hr == DI_OK) || (hr == S_FALSE)) {
+		BYTE diks[256];
+		g_pKeyDevice->GetDeviceState(sizeof(diks), &diks);
+
+		if (diks[KeyName] & 0x80)
+		{
+			if (KeyOldState[KeyName] == KeyOn)
+			{
+				KeyOldState[KeyName] = KeyOn;
+				return KeyOn;
+			}
+			else
+			{
+				KeyOldState[KeyName] = KeyOn;
+				return KeyPush;
+			}
+
+		}
+		else
+		{
+			if (KeyOldState[KeyName] == KeyOn)
+			{
+				KeyOldState[KeyName] = KeyOff;
+				return KeyRelease;
+			}
+			else
+			{
+				KeyOldState[KeyName] = KeyOff;
+				return KeyOff;
+			}
+			
+		}
+	}
 }
