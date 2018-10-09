@@ -7,24 +7,22 @@ OBJECT_STATE Block;
 TEXTURE_STATE g_Girl = { 1000.f,450.f,150.f };
 TEXTURE_STATE Logo = { 320.f, -300.f, 100.f };//ロゴマークの初期位置
 void TEXTWRITTEN();
-int BlockColor;
+static DWORD BlockColor;
 static char debug[512]{'\0'};
 char Score[255];
 int g_scene = 0;
 void ResultRender(void);
-
+void DrowTexture(CUSTOMVERTEX vertex[4], int textureNumber);
+void DrowWord(RECT rect, LPCSTR text, DWORD color = 0xffffffff);
 /**
 *描画処理
 */
 void Render() {
 	
-	static int i = 0;
-	static int j = 0;
 	TEXTURE textureID;
 	//-----------------------------------------------------
 	//頂点情報を入れる--------------------------------------
 
-	//STAGE_STATE StagePosition{ 640.f,360.f,200.f,250.f };
 	
 	
 	CUSTOMVERTEX backGround[4]
@@ -48,15 +46,6 @@ void Render() {
 	{ FIELD_WIDTH * (BLOCK_HARFWIDTH * 2) + FieldInitPosX + 5,FIELD_HEIGHT * (BLOCK_HARFWIDTH * 2) + FieldInitPosY, 1.f,1.f, 0xFFFFFFFF, 1.f, 1.f },
 	{ FieldInitPosX - (BLOCK_HARFWIDTH * 2) - 5,			  FIELD_HEIGHT * (BLOCK_HARFWIDTH * 2) + FieldInitPosY, 1.f,1.f, 0xFFFFFFFF, 0.f, 1.f }
 	};
-
-	//CUSTOMVERTEX TetorisBlock[4]
-	//{
-	//{ BlockPosition.x - BLOCK_HARFWIDTH*5,BlockPosition.y - BLOCK_HARFWIDTH*5, 1.f,1.f, 0xFFFFFFFF, 0.f, 0.f },
-	//{ BlockPosition.x + BLOCK_HARFWIDTH*5,BlockPosition.y - BLOCK_HARFWIDTH*5, 1.f,1.f, 0xFFFFFFFF, 1.f, 0.f },
-	//{ BlockPosition.x + BLOCK_HARFWIDTH*5,BlockPosition.y + BLOCK_HARFWIDTH*5, 1.f,1.f, 0xFFFFFFFF, 1.f, 1.f },
-	//{ BlockPosition.x - BLOCK_HARFWIDTH*5,BlockPosition.y + BLOCK_HARFWIDTH*5, 1.f,1.f, 0xFFFFFFFF, 0.f, 1.f }
-	//};
-
 	CUSTOMVERTEX logo[4]
 	{	
 	{ Logo.x - Logo.scale,			Logo.y - Logo.scale,         1.f, 1.f, 0xFFFFFFFF, 0.f, 0.f },
@@ -64,7 +53,6 @@ void Render() {
 	{ Logo.x + Logo.scale + 800.f,  Logo.y + Logo.scale + 400.f, 1.f, 1.f, 0xFFFFFFFF, 1.f, 1.f },
 	{ Logo.x - Logo.scale,			Logo.y + Logo.scale + 400.f, 1.f, 1.f, 0xFFFFFFFF, 0.f, 1.f }
 	};
-
 	CUSTOMVERTEX start[4]
 	{
 	{ 210.f,   460.f, 1.f,1.f, 0xFFFFFFFF, 0.f, 0.f },
@@ -81,7 +69,7 @@ void Render() {
 	};
 	CUSTOMVERTEX backGroundPause[4]
 	{
-		{ 0.0f, 0.0f, 1.f, 1.f, D3DCOLOR_ARGB(150,0,0,0) , 0.f, 0.f },
+	{ 0.0f, 0.0f, 1.f, 1.f, D3DCOLOR_ARGB(150,0,0,0) , 0.f, 0.f },
 	{ WIDTH, 0.0f, 1.f, 1.f, D3DCOLOR_ARGB(150,0,0,0) , 1.f, 0.f },
 	{ WIDTH, HEIGHT, 1.f, 1.f,D3DCOLOR_ARGB(150,0,0,0) , 1.f, 1.f },
 	{ 0.0f, HEIGHT, 1.f, 1.f,D3DCOLOR_ARGB(150,0,0,0) , 1.f, 1.f },
@@ -103,19 +91,16 @@ void Render() {
 	//文字
 	if (g_scene == STATE_TITLE)
 	{
-		g_pD3Device->SetTexture(0, g_pTexture[BG_MAIN_TEX]);
-		g_pD3Device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, backGround, sizeof(CUSTOMVERTEX));
+		DrowTexture(backGround, BG_MAIN_TEX);
 
 		LogoControl();
 
-		g_pD3Device->SetTexture(0, g_pTexture[LOGO_TEX]);
-		g_pD3Device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2,logo, sizeof(CUSTOMVERTEX));
+		DrowTexture(logo, LOGO_TEX);
 
 		static int count = 0;
 		count = count++;
 		if (count > 30){
-			g_pD3Device->SetTexture(0, g_pTexture[START_TEX]);
-			g_pD3Device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, start, sizeof(CUSTOMVERTEX));
+			DrowTexture(start, START_TEX);
 			if (count == 60)
 			{
 				count = 0;
@@ -132,16 +117,13 @@ if (g_scene == STATE_RESULT)
 
 if (g_scene == STATE_MAIN) {
 	//背景設置
-	g_pD3Device->SetTexture(0, g_pTexture[BG_MAIN_TEX]);
-	g_pD3Device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, backGroundMain, sizeof(CUSTOMVERTEX));
-
-	g_pD3Device->SetTexture(0, g_pTexture[STAGE_TEX]);
-	g_pD3Device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, tetrisStage, sizeof(CUSTOMVERTEX));
+	DrowTexture(backGroundMain, BG_MAIN_TEX);
+	DrowTexture(tetrisStage, STAGE_TEX);
 
 	//PLAYFIELDの設置
 	if (!EffectOn&&!ChainEffectOn) {
-		for (i = 0; i < FIELD_HEIGHT; i++) {
-			for (j = 0; j < FIELD_WIDTH; j++) {
+		for (int i = 0; i < FIELD_HEIGHT; i++) {
+			for (int j = 0; j < FIELD_WIDTH; j++) {
 
 				switch (TetrisField[i][j])
 				{
@@ -201,15 +183,14 @@ if (g_scene == STATE_MAIN) {
 				{ Block.x + Block.scale, Block.y + Block.scale, 1.f, 1.f, BlockColor, 1.f, 1.f },
 				{ Block.x - Block.scale, Block.y + Block.scale, 1.f, 1.f, BlockColor, 0.f, 1.f }
 				};
-				g_pD3Device->SetTexture(0, g_pTexture[textureID]);
-				g_pD3Device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, BLOCK_VTX, sizeof(CUSTOMVERTEX));
+				DrowTexture(BLOCK_VTX, textureID);
 			}
 		}
 	}
 	//EFFECT
 	if (EffectOn|| ChainEffectOn) {
-		for (i = 0; i < FIELD_HEIGHT; i++) {
-			for (j = 0; j < FIELD_WIDTH; j++) {
+		for (int i = 0; i < FIELD_HEIGHT; i++) {
+			for (int j = 0; j < FIELD_WIDTH; j++) {
 
 				switch (FieldEffectBuff[i][j])
 				{
@@ -269,8 +250,7 @@ if (g_scene == STATE_MAIN) {
 				{ Block.x + Block.scale, Block.y + Block.scale, 1.f, 1.f, BlockColor, 1.f, 1.f },
 				{ Block.x - Block.scale, Block.y + Block.scale, 1.f, 1.f, BlockColor, 0.f, 1.f }
 				};
-				g_pD3Device->SetTexture(0, g_pTexture[textureID]);
-				g_pD3Device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, BLOCK_VTX, sizeof(CUSTOMVERTEX));
+				DrowTexture(BLOCK_VTX, textureID);
 			}
 		}
 	}
@@ -338,8 +318,7 @@ if (g_scene == STATE_MAIN) {
 			{ Block.x - Block.scale, Block.y + Block.scale, 1.f, 1.f, BlockColor, 0.f, 1.f }
 			};
 
-			g_pD3Device->SetTexture(0, g_pTexture[textureID]);
-			g_pD3Device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, BLOCK02_VTX, sizeof(CUSTOMVERTEX));
+			DrowTexture(BLOCK02_VTX, textureID);
 		}
 	}
 	//Next　First
@@ -405,8 +384,7 @@ if (g_scene == STATE_MAIN) {
 			{ Block.x - Block.scale, Block.y + Block.scale, 1.f, 1.f, BlockColor, 0.f, 1.f }
 			};
 
-			g_pD3Device->SetTexture(0, g_pTexture[textureID]);
-			g_pD3Device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, BLOCK02_VTX, sizeof(CUSTOMVERTEX));
+			DrowTexture(BLOCK02_VTX, textureID);
 		}
 	}
 	//Next　Second
@@ -471,9 +449,7 @@ if (g_scene == STATE_MAIN) {
 			{ Block.x + Block.scale, Block.y + Block.scale, 1.f, 1.f, BlockColor, 1.f, 1.f },
 			{ Block.x - Block.scale, Block.y + Block.scale, 1.f, 1.f, BlockColor, 0.f, 1.f }
 			};
-
-			g_pD3Device->SetTexture(0, g_pTexture[textureID]);
-			g_pD3Device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, BLOCK03_VTX, sizeof(CUSTOMVERTEX));
+			DrowTexture(BLOCK03_VTX, textureID);
 		}
 	}
 	//Next　Third
@@ -539,8 +515,7 @@ if (g_scene == STATE_MAIN) {
 			{ Block.x - Block.scale, Block.y + Block.scale, 1.f, 1.f, BlockColor, 0.f, 1.f }
 			};
 
-			g_pD3Device->SetTexture(0, g_pTexture[textureID]);
-			g_pD3Device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, BLOCK04_VTX, sizeof(CUSTOMVERTEX));
+			DrowTexture(BLOCK04_VTX, textureID);
 		}
 	}
 	//Score
@@ -607,17 +582,14 @@ if (g_scene == STATE_MAIN) {
 			{ Block.x - Block.scale, Block.y + Block.scale, 1.f, 1.f, BlockColor, 0.f, 1.f }
 			};
 
-			g_pD3Device->SetTexture(0, g_pTexture[textureID]);
-			g_pD3Device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, BLOCK04_VTX, sizeof(CUSTOMVERTEX));
+			DrowTexture(BLOCK04_VTX, textureID);
 		}
 
 	}
-		g_pD3Device->SetTexture(0, g_pTexture[CHAIN_COLOR_TEX]);
-		g_pD3Device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, CAHINCOLOR, sizeof(CUSTOMVERTEX));
+	DrowTexture(CAHINCOLOR, CHAIN_COLOR_TEX);
 	if (GameStop)
 	{
-		g_pD3Device->SetTexture(0, g_pTexture[PAUSE_TEX]);
-		g_pD3Device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, backGroundPause, sizeof(CUSTOMVERTEX));
+		DrowTexture(backGroundPause, PAUSE_TEX);
 	}
 	TEXTWRITTEN();
 }
@@ -657,11 +629,9 @@ void ResultRender(void){
 
 
 	//描画の開始
-	g_pD3Device->SetTexture(0, g_pTexture[BG_RESULT_TEX]);
-	g_pD3Device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, result, sizeof(CUSTOMVERTEX));
+	DrowTexture(result, BG_RESULT_TEX);
+	DrowTexture(resultgirl, RESULTGIRL_TEX);
 
-	g_pD3Device->SetTexture(0, g_pTexture[RESULTGIRL_TEX]);
-	g_pD3Device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, resultgirl, sizeof(CUSTOMVERTEX));
 
 	
 	sprintf_s(Score, 255, "%d", NowScorePoint);
@@ -718,13 +688,13 @@ void TEXTWRITTEN() {
 	};
 	RECT SCOREBOARD = {
 		SUBBOARD_LX - BLOCK_HARFWIDTH,		// 左上のx座標
-		SCOREBOARD_Y -15,		// 左上のy座標
+		SCOREBOARD_Y - 15,		// 左上のy座標
 		SUBBOARD_LX + 200,		// 右下のx座標
 		SCOREBOARD_Y + 600			// 右下のy座標
 	};
 	RECT DrawnSCORE = {
 		SUBBOARD_LX - BLOCK_HARFWIDTH / 4,		// 左上のx座標
-		SCOREBOARD_Y + BLOCK_HARFWIDTH*2,			// 左上のy座標
+		SCOREBOARD_Y + BLOCK_HARFWIDTH * 2,			// 左上のy座標
 		SUBBOARD_LX + 180 - BLOCK_HARFWIDTH,	// 右下のx座標
 		SCOREBOARD_Y + 250 - BLOCK_HARFWIDTH	// 右下のy座標
 	};
@@ -791,7 +761,7 @@ void TEXTWRITTEN() {
 	);
 
 
-	
+
 	g_pFont[Score_FONT]->DrawText(
 		NULL,							// NULL
 		Score,					// 描画テキスト
@@ -843,7 +813,7 @@ void TEXTWRITTEN() {
 	}
 #ifdef _DEBUG
 
-	RECT DebugField;
+
 	float PutDebugX = 0;
 	float PutDebugY = 0;
 	for (int height = 0; height < FIELD_HEIGHT; height++) {
@@ -852,9 +822,9 @@ void TEXTWRITTEN() {
 			PutDebugY = height * 20;
 
 			sprintf_s(debug, 512, "%d", TetrisField[height][width]);
-			
+
 			RECT Debug = {
-				PutDebugX+20,	// 左上のx座標
+				PutDebugX + 20,	// 左上のx座標
 				PutDebugY,	// 左上のy座標
 				1200,	// 右下のx座標
 				700		// 右下のy座標
@@ -886,4 +856,21 @@ void TEXTWRITTEN() {
 		D3DCOLOR_ARGB(0xff, 0x5f, 0x5f, 0x5f)	// color
 	);
 #endif // DEBUG
-	}
+}
+
+void DrowTexture(CUSTOMVERTEX vertex[4],int textureNumber) {
+	g_pD3Device->SetTexture(0, g_pTexture[textureNumber]);
+	g_pD3Device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertex, sizeof(CUSTOMVERTEX));
+}
+
+void DrowWord(RECT rect,LPCSTR text,DWORD color) {
+	g_pFont[MAIN_FONT]->DrawText(
+		NULL,		// NULL
+		text,		// 描画テキスト
+		-1,			// 全て表示
+		&rect,		// 表示範囲
+		DT_LEFT,	// 左寄せ
+		color		// color
+	);
+
+}

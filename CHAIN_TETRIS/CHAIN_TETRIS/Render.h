@@ -15,7 +15,7 @@ struct OBJECT_STATE
 extern STAGE_STATE StagePosition;
 extern TEXTURE_STATE Logo;
 extern TEXTURE_STATE g_Girl;
-extern int BlockColor;
+
 extern int g_scene;
 
 #endif // !RENDER_H

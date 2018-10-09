@@ -19,7 +19,7 @@ bool isRight, isLeft, isDown, isRotateR, isRotateL, isPause, isHold, isDrop;
 bool GameStop = false;
 bool g_moveup = true;
 int NowScorePoint;
-BYTE KeyOldState[256];
+static BYTE KeyOldState[256];
 
 
 void Control() {
@@ -150,7 +150,6 @@ void Control() {
 		if (g_scene == STATE_RESULT)
 		{
 			g_scene = STATE_TITLE;
-			KeyOldState[DIK_ESCAPE] = KeyOff;
 		}
 		if (g_scene == STATE_MAIN) {
 			isPause = true;
@@ -158,7 +157,6 @@ void Control() {
 	}
 	if ((GetKeyBoardState(DIK_RETURN)) || (GetKeyBoardState(DIK_NUMPADENTER))) {
 		PushEnter = true;
-		//GetKeyBoardState(DIK_RETURN] = NULL;
 	}
 
 	if (PushEnter) {

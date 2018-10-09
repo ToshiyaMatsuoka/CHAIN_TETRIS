@@ -16,7 +16,6 @@ void EffectControl(int field[FIELD_HEIGHT][FIELD_WIDTH]) {
 	static int height = 0;
 	static int width = 0;
 	static bool clear[10];
-	int clearCnt;
 	bool canupChain = false;
 
 
@@ -58,10 +57,8 @@ void ChainEffect(int field[FIELD_HEIGHT][FIELD_WIDTH]/*int chainHeight*/,int Buf
 	static int width = 0;
 	static bool clear[10];
 	static bool HorizontalCheck = false;
-	int clearCnt;
 	//int BuffChainCheck[10];
 	int BuffChainbuffer[10];
-	int BuffChains;
 
 	static int chainHeight = 0;
 	static int ClearLineCOUNTER = 0;
