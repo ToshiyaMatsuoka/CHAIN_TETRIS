@@ -125,28 +125,28 @@ void Control() {
 
 
 
-	if (GetKeyBoardState(DIK_LEFT)) {
+	if (KeyOn == GetKeyBoardState(DIK_LEFT)) {
 		isLeft = true;
 	}
-	if (GetKeyBoardState(DIK_RIGHT)) {
+	if (KeyOn == GetKeyBoardState(DIK_RIGHT)) {
 		isRight = true;
 	}
-	if (GetKeyBoardState(DIK_UP)) {
+	if (KeyOn == GetKeyBoardState(DIK_UP)) {
 		isRotateR = true;
 	}
-	if (GetKeyBoardState(DIK_DOWN)) {
+	if (KeyOn == GetKeyBoardState(DIK_DOWN)) {
 		isDown = true;
 	}
-	if (GetKeyBoardState(DIK_SPACE)) {
+	if (KeyOn == GetKeyBoardState(DIK_SPACE)) {
 		isDrop = true;
 	}
-	if (GetKeyBoardState(DIK_C)) {
+	if (KeyRelease == GetKeyBoardState(DIK_C)) {
 		isHold = true;
 	}
-	if (GetKeyBoardState(DIK_Z)) {
+	if (KeyOn == GetKeyBoardState(DIK_Z)) {
 		isRotateL = true;
 	}
-	if (KeyRelease==GetKeyBoardState(DIK_ESCAPE)) {
+	if (KeyRelease == GetKeyBoardState(DIK_ESCAPE)) {
 		if (g_scene == STATE_RESULT)
 		{
 			g_scene = STATE_TITLE;
@@ -176,62 +176,6 @@ void Control() {
 		keyStroke[0] = 0;
 	}
 	else PushEnter = false;
-
-	if (!GameStop) {
-		//ƒeƒgƒŠƒ~ƒm“®ì
-		if (isRight) {
-
-			keyStroke[RIGHT]++;
-			if (keyStroke[RIGHT] > KEY_RESTAIN) {
-				isRight = false;
-				keyStroke[RIGHT] = 0;
-			}
-		}
-		if (isLeft) {
-
-			keyStroke[LEFT]++;
-			if (keyStroke[LEFT] > KEY_RESTAIN) {
-				isLeft = false;
-				keyStroke[LEFT] = 0;
-			}
-		}
-		if (isDown) {
-			keyStroke[DOWN]++;
-			if (keyStroke[DOWN] > KEY_RESTAIN) {
-				isDown = false;
-				keyStroke[DOWN] = 0;
-			}
-		}
-		if (isRotateR&&isRotateL) {
-			isRotateR = false;
-			isRotateL = false;
-		}
-		if (isRotateR) {
-			keyStroke[ROTATERIGHT]++;
-			if (keyStroke[ROTATERIGHT] > KEY_RESTAIN) {
-				isRotateR = false;
-				keyStroke[ROTATERIGHT] = 0;
-			}
-		}
-		if (isRotateL) {
-			keyStroke[ROTATELEFT]++;
-			if (keyStroke[ROTATELEFT] > KEY_RESTAIN) {
-				isRotateL = false;
-				keyStroke[ROTATELEFT] = 0;
-			}
-		}
-		if (isDrop) {
-			keyStroke[DROP]++;
-			if (keyStroke[DROP] > KEY_RESTAIN) {
-				isDrop = false;
-				keyStroke[DROP] = 0;
-
-			}
-		}
-		//if (isHold) {
-		//	
-		//}
-	}
 
 	if (isPause) {
 
