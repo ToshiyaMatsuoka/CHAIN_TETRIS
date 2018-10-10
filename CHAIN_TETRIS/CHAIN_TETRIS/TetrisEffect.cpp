@@ -4,15 +4,9 @@
 
 int FieldEffectBuff[FIELD_HEIGHT][FIELD_WIDTH];
 void chain(int field[FIELD_HEIGHT][FIELD_WIDTH], int chainHeight, int BuffChainCheck[10], bool HorizontalCheck, int ChainCheckCnt, int BuffChainbuffer[10]);
+
 void EffectControl(int field[FIELD_HEIGHT][FIELD_WIDTH]) {
 	
-	//for (int Hcopy = 0; Hcopy < FIELD_HEIGHT; Hcopy++) {
-	//	for (int Wcopy = 0; Wcopy < FIELD_WIDTH; Wcopy++) {
-	//		FieldEffectBuff[Hcopy][Wcopy] = field[Hcopy][Wcopy];
-	//	}
-	//}
-
-	/*static bool Accorded;*/
 	static int height = 0;
 	static int width = 0;
 	static bool clear[10];
@@ -51,7 +45,7 @@ void EffectControl(int field[FIELD_HEIGHT][FIELD_WIDTH]) {
 	}
 }
 
-void ChainEffect(int field[FIELD_HEIGHT][FIELD_WIDTH]/*int chainHeight*/,int BuffChainCheck[10]) {
+void ChainEffect(int field[FIELD_HEIGHT][FIELD_WIDTH],int BuffChainCheck[10]) {
 	
 	static int height = 0;
 	static int width = 0;
