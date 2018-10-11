@@ -1,7 +1,6 @@
 #include "DX9.h"
 #include "TetriminoState.h"
 
-
 //ダイレクト3Dの初期化関数
 HRESULT InitD3d(HWND hWnd)
 {
@@ -47,7 +46,6 @@ HRESULT InitD3d(HWND hWnd)
 	return S_OK;
 }
 
-
 //DirectInput
 HRESULT InitDinput(HWND hWnd) {
 	HRESULT hr;
@@ -76,48 +74,6 @@ HRESULT InitDinput(HWND hWnd) {
 	}
 	// デバイスを「取得」する
 	g_pKeyDevice->Acquire();
-	return S_OK;
-}
-
-//マウス
-HRESULT InitDinputMouse(HWND hWnd)
-{
-	HRESULT hr;
-	if (FAILED(hr = g_pDinput->CreateDevice(
-		GUID_SysMouse,
-		&g_pDIMouse,
-		NULL)))
-	{
-		return hr;
-	}
-
-	if (FAILED(hr = g_pDIMouse->SetDataFormat(&c_dfDIMouse)))
-	{
-		return hr;
-	}
-
-	if (FAILED(hr = g_pDIMouse->SetCooperativeLevel(hWnd,
-		DISCL_NONEXCLUSIVE | DISCL_FOREGROUND)))
-	{
-		return hr;
-	}
-
-	DIPROPDWORD diprop;
-	diprop.diph.dwSize = sizeof(diprop);
-	diprop.diph.dwHeaderSize = sizeof(diprop.diph);
-	diprop.diph.dwObj = 0;
-	diprop.diph.dwHow = DIPH_DEVICE;
-	diprop.dwData = DIPROPAXISMODE_REL;
-
-	if (FAILED(hr = g_pDIMouse->SetProperty(
-		DIPROP_AXISMODE,
-		&diprop.diph)))
-	{
-		return hr;
-	}
-
-	g_pDIMouse->Acquire();
-
 	return S_OK;
 }
 

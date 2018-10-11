@@ -1,7 +1,3 @@
-#include <Windows.h>
-#include <d3dx9.h>
-#include <dinput.h>
-#include <D3dx9core.h>
 #include "Main.h"
 #include "Render.h"
 #include "Control.h"
@@ -14,11 +10,8 @@
 #include <crtdbg.h>
 #include "SoundsManager.h"
 
-
 #define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1)
 #define SAFE_RELEASE(p) { if(p) { (p)->Release(); (p)=NULL; } }
-
-
 
 LPDIRECT3D9			  g_pDirect3D;		//	Direct3Dのインターフェイス
 LPDIRECT3DTEXTURE9	  g_pTexture[TEXMAX];	//	画像の情報を入れておく為のポインタ配列
@@ -26,18 +19,12 @@ IDirect3DDevice9*	  g_pD3Device;		//	Direct3Dのデバイス
 D3DDISPLAYMODE		  g_D3DdisplayMode;
 LPDIRECTINPUT8		  g_pDinput = NULL;
 LPDIRECTINPUTDEVICE8  g_pKeyDevice = NULL;
-LPDIRECTINPUTDEVICE8  g_pDIMouse = NULL;
 D3DPRESENT_PARAMETERS g_D3dPresentParameters;
 LPD3DXFONT	g_pFont[FONTMAX];			//Font
 
-
-LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void SetFont(int height, int width, int fontname, LPCSTR fonttype= "VENUS RISING");
 void ReadTexture(int TextureNumber, LPCSTR FileName);
-
-void FreeDx();
 int EndGame();
-
 //ウィンドウプロシージャ
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
 {
@@ -69,7 +56,6 @@ void FreeDx()
 		g_pKeyDevice->Unacquire();
 	}
 	SAFE_RELEASE(g_pKeyDevice);
-	SAFE_RELEASE(g_pDIMouse);
 	SAFE_RELEASE(g_pDinput);
 
 	SAFE_RELEASE(g_pDirect3D);

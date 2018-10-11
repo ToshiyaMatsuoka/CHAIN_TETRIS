@@ -17,7 +17,6 @@ void Gamescene() {
 			g_ScorePoint = 0;
 			NowScorePoint = 0;
 		}
-
 		ControlTetris();
 	}
 }

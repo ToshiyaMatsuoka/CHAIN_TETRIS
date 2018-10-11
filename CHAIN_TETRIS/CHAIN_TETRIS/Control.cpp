@@ -2,7 +2,6 @@
 #include "Render.h"
 #include "DX9.h"
 #include "TetriminoState.h"
-#include "Gamescene.h"
 
 enum KEYNUMBER {
 	RIGHT,
@@ -15,11 +14,16 @@ enum KEYNUMBER {
 	DROP
 
 };
+
+#define SWITCH_RESULT 80
+//タイトルロゴ落下量
+#define FALL_SPEED 5.f
+
 bool isRight, isLeft, isDown, isRotateR, isRotateL, isPause, isHold, isDrop;
 bool GameStop = false;
 bool g_moveup = true;
 int NowScorePoint;
-static BYTE KeyOldState[256];
+BYTE KeyOldState[256];
 
 
 void Control() {
@@ -45,36 +49,17 @@ void Control() {
 	CheckButtonState(XINPUT_GAMEPAD_LEFT_SHOULDER, ButtonLB);
 	CheckButtonState(XINPUT_GAMEPAD_RIGHT_SHOULDER, ButtonRB);
 
-	if (GetAnalogL(ANALOGRIGHT))
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			isRight = true;
-		}
+	if (GetAnalogL(ANALOGRIGHT))	{
+		isRight = true;
 	}
 
-	if (GetAnalogL(ANALOGLEFT))
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			isLeft = true;
-		}
+	if (GetAnalogL(ANALOGLEFT))	{
+		isLeft = true;
 	}
 
 	//ホームポジションで上下が入力され続ける
-	if (!GetAnalogL(ANALOGDOWN))
-	{
-		for (int i = 0; i < 4; i++)
-		{
-
-		}
-	}
-	if (!GetAnalogL(ANALOGUP))
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			isDown = true;
-		}
+	if (!GetAnalogL(ANALOGUP))	{
+		isDown = true;
 	}
 
 	if (!PadState[ButtonA]) {
@@ -99,9 +84,6 @@ void Control() {
 		}
 		else isPause = true;
 	}
-	if (!PadState[ButtonUP]) {
-
-	}
 	if (!PadState[ButtonDOWN]) {
 		isDown = true;
 	}
@@ -111,14 +93,6 @@ void Control() {
 	if (!PadState[ButtonRIGHT]) {
 		isRight = true;
 	}
-	if (!PadState[ButtonLB]) {
-
-	}
-	if (!PadState[ButtonRB]) {
-
-	}
-
-
 
 
 	if (KeyOn == GetKeyBoardState(DIK_LEFT)) {

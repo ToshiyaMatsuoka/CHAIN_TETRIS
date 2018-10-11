@@ -3,6 +3,28 @@
 #include "Gamescene.h"
 #include "TetrisEffect.h"
 
+//サブボード
+#define SUBBOARD_LX 200.f
+#define SUBBOARD_RX 1000.f
+#define NEXTBOARD_Y 100.f
+#define NEXT2BOARD_Y 250.f
+#define NEXT3BOARD_Y  400.f
+#define HOLDBOARD_Y 100.f
+#define SCOREBOARD_Y 300.f
+//カラーセット
+#define MAGENTA 0xffff00ff
+#define CYAN 0xff00ffff
+#define ORANGE 0xffffa500
+#define BLACK 0x60000000
+#define WHITE 0x00ffffff
+#define INVISIBLE 0x00ffffff
+#define BASEED 0xffffffff
+//フィールド左端
+#define FieldInitPosX    500.f
+#define FieldInitPosY    -64.f
+//ブロック
+#define BLOCK_HARFWIDTH 16.f
+
 OBJECT_STATE Block;
 TEXTURE_STATE g_Girl = { 1000.f,450.f,150.f };
 TEXTURE_STATE Logo = { 320.f, -300.f, 100.f };//ロゴマークの初期位置
@@ -12,8 +34,6 @@ static char debug[512]{'\0'};
 
 int g_scene = 0;
 void ResultRender(void);
-void DrowTexture(CUSTOMVERTEX vertex[4], int textureNumber);
-void DrowWord(RECT rect, LPCSTR text,int FontNumber,int textformat= DT_LEFT, DWORD color = 0xffffffff);
 void SetBoardTextureID(int Board, int i, int j, TEXTURE* textureID);
 void SetFieldTextureID(int Board, int i, int j, TEXTURE* textureID);
 

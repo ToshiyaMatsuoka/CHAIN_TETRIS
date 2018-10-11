@@ -1,6 +1,11 @@
 #include "TetriminoState.h"
 #include "TetrisEffect.h"
 
+#define EFFECTTIME 45
+//キー入力制限
+#define CREATE_INTERVAL 4
+#define KEY_RESTAIN 5
+
 static int CurrentTetrimino, TetriminoNext[3], HoldTetrimino;
 static int moveY;
 static int moveX;
@@ -39,7 +44,6 @@ void ChoseTetrimino(int* CountMoveTime, TETRIMINO* tetrimino, TETRIMINO* RotedBu
 void SetdownCheck(TETRIMINO* tetrimino, bool canMoveDown[], bool* SetDown);
 void FalingTetrimino(TETRIMINO* tetrimino, bool canMoveDown[], int* countFalling);
 void ReflectTetrimino(TETRIMINO* tetrimino, int moveYtoCentral, int moveXtoCentral);
-
 
 ////////////////////////////////////////
 void CreateField(void) {
@@ -158,7 +162,6 @@ void ControlTetris(void) {
 	//GAME OVERの処理//
 	GameOverControl(&canHold, &isCreated, &GameOver, &GameScene, &GAMEOPEN);
 }
-
 void tetriminoSetDown(bool* SetDown, bool* isCreated, bool* OnlyOnceHold, int* EffectRoop) {
 	static bool canClear = true;
 	static bool CanCopy = true;
@@ -267,7 +270,6 @@ void tetriminoSetDown(bool* SetDown, bool* isCreated, bool* OnlyOnceHold, int* E
 		ScoreCalculation(&RisenCount, isCreated, &CanCopy, SetDown, &canClear, OnlyOnceHold);
 	}
 }
-
 void ChainProcessing(int* chainHeight, int ChainCheck[], int* RisenCount,bool* ChainEffectOn) {
 	bool isup = false;
 	int chainbuffer[10];
@@ -342,7 +344,6 @@ void ChainProcessing(int* chainHeight, int ChainCheck[], int* RisenCount,bool* C
 	}
 	g_RiseCOUNTER = (*RisenCount);
 }
-
 void GameOverControl(bool* canHold,bool* isCreated, bool* GameOver, bool* GameScene, bool* GAMEOPEN) {
 	for (int BlockCheck = 1; BlockCheck < 4; BlockCheck++) {
 		if (TetrisField[1][1] == 10 + BlockCheck ||
@@ -365,7 +366,6 @@ void GameOverControl(bool* canHold,bool* isCreated, bool* GameOver, bool* GameSc
 	}
 
 }
-
 void ScoreCalculation(int* RisenCount,bool* isCreated, bool* CanCopy, bool* SetDown, bool* canClear,bool* OnlyOnceHold) {
 	//一連鎖で1.25倍、連鎖増えるごとに0.25足された数になる スコア*(1+0.25*連鎖数
 	switch (ClearLineCOUNTER) {
@@ -400,7 +400,6 @@ void ScoreCalculation(int* RisenCount,bool* isCreated, bool* CanCopy, bool* SetD
 	}
 
 }
-
 void RightMove(int* CountMoveTime, TETRIMINO* tetrimino) {
 	bool canMoveRight[4] = { false,false,false,false };
 
@@ -1121,7 +1120,6 @@ void HoldingTetrimino(int* CountMoveTime, bool* OnlyOnceHold,bool* canHold, TETR
 	}
 
 }
-
 void ChoseTetrimino(int* CountMoveTime, TETRIMINO* tetrimino, TETRIMINO* RotedBuffer, bool* isCreated,int* BlockColorSelector, bool canMoveDown[]) {
 	if (*CountMoveTime >= CREATE_INTERVAL) {
 

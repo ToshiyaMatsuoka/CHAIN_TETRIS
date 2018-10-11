@@ -1,8 +1,6 @@
 #ifndef CONTROL_H
 #define CONTROL_H
-#include "Main.h"
-#include "Render.h"
-#include "DX9.h"
+
 
 enum KEYSTATE
 {
@@ -20,6 +18,7 @@ extern bool isRight, isLeft, isDown, isRotateR, isRotateL, isPause, isHold, isDr
 extern bool GameStop;
 extern bool g_moveup;
 extern int NowScorePoint;
+extern BYTE KeyOldState[256];
 
 int GetKeyBoardState(int KeyName);
 void Control(void);

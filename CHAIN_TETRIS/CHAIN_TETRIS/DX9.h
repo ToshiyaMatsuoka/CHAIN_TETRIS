@@ -1,8 +1,6 @@
 #ifndef DX9_H
 #define DX9_H
 #include "Main.h"
-#include "Render.h"
-
 
 enum PADSTATE
 {
@@ -45,9 +43,6 @@ extern PADSTATE PadState[buttomindexMAX];
 extern PADSTATE PadOldState[buttomindexMAX];
 
 void CheckButtonState(WORD, int);
-
-
-
 HRESULT InitD3d(HWND hWnd);
 HRESULT InitDinput(HWND hWnd);
 #endif // !RENDER_H

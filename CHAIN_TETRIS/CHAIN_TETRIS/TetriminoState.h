@@ -3,7 +3,6 @@
 #include "Main.h"
 #include "Render.h"
 #include "Control.h"
-#include "DX9.h"
 
 
 struct TETRIMINO {
