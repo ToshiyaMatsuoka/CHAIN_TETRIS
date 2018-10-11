@@ -24,10 +24,6 @@ static BYTE KeyOldState[256];
 
 void Control() {
 
-	static int keyStroke[10];
-	if (g_scene == STATE_TITLE || g_scene == STATE_RESULT) {
-		keyStroke[0]++;
-	}
 	bool PushEnter = false;
 	//XInputデバイス操作
 	GetControl();
@@ -90,13 +86,13 @@ void Control() {
 	if (!PadState[ButtonX]) {
 		isRotateL = true;
 	}
-	if (!PadState[ButtonY]) {
+	if (PadRelease == PadState[ButtonY]) {
 		isDrop = true;
 	}
-	if (!PadState[ButtonStart]) {
+	if (PadRelease == PadState[ButtonStart]) {
 		PushEnter = true;
 	}
-	if (!PadState[ButtonBack]) {
+	if (PadRelease == PadState[ButtonBack]) {
 		if (g_scene == STATE_RESULT)
 		{
 			g_scene = STATE_TITLE;
@@ -137,7 +133,7 @@ void Control() {
 	if (KeyOn == GetKeyBoardState(DIK_DOWN)) {
 		isDown = true;
 	}
-	if (KeyOn == GetKeyBoardState(DIK_SPACE)) {
+	if (KeyRelease == GetKeyBoardState(DIK_SPACE)) {
 		isDrop = true;
 	}
 	if (KeyRelease == GetKeyBoardState(DIK_C)) {
@@ -155,10 +151,9 @@ void Control() {
 			isPause = true;
 		}
 	}
-	if ((GetKeyBoardState(DIK_RETURN)) || (GetKeyBoardState(DIK_NUMPADENTER))) {
+	if ((KeyRelease == GetKeyBoardState(DIK_RETURN)) || (KeyRelease == GetKeyBoardState(DIK_NUMPADENTER))) {
 		PushEnter = true;
 	}
-
 	if (PushEnter) {
 
 		if (g_scene == STATE_TITLE) {
@@ -173,7 +168,6 @@ void Control() {
 			PushEnter = false;
 			GameStop = false;
 		}
-		keyStroke[0] = 0;
 	}
 	else PushEnter = false;
 
@@ -186,12 +180,12 @@ void Control() {
 		static int GameOverCnt = 0;
 		GameOverCnt++;
 		if (GameOverCnt > SWITCH_RESULT) {
+			memset(KeyOldState, KeyOff, 256);
 			g_scene = STATE_RESULT;
 			GameOverCnt = 0;
 		}
 	}
 }
-
 
 //Logo制御
 void LogoControl() {
@@ -214,8 +208,7 @@ void ResultControl(){
 	if (g_moveup){
 		x = x + 0.1f;
 		g_Girl.y -= cos(x);
-	}
-	
+	}	
 	NowScorePoint += (g_ScorePoint / 180) + 1;
 	if (g_ScorePoint <= NowScorePoint)
 	{
@@ -242,7 +235,6 @@ int GetKeyBoardState(int KeyName) {
 				KeyOldState[KeyName] = KeyOn;
 				return KeyPush;
 			}
-
 		}
 		else
 		{
@@ -255,8 +247,7 @@ int GetKeyBoardState(int KeyName) {
 			{
 				KeyOldState[KeyName] = KeyOff;
 				return KeyOff;
-			}
-			
+			}			
 		}
 	}
 }

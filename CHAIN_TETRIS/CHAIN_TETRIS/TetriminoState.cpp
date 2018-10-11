@@ -36,6 +36,9 @@ void RotetionLeftMove(int* CountMoveTime, bool canRotate[], TETRIMINO* RotedBuff
 void RotetionRightMove(int* CountMoveTime, bool canRotate[], TETRIMINO* RotedBuffer, TETRIMINO* tetrimino);
 void HoldingTetrimino(int* CountMoveTime, bool* OnlyOnceHold, bool* canHold, TETRIMINO* tetrimino, TETRIMINO* RotedBuffer,TETRIMINO* MovingTetrimino);
 void ChoseTetrimino(int* CountMoveTime, TETRIMINO* tetrimino, TETRIMINO* RotedBuffer, bool* isCreated, int* BlockColorSelector, bool canMoveDown[]);
+void SetdownCheck(TETRIMINO* tetrimino, bool canMoveDown[], bool* SetDown);
+void FalingTetrimino(TETRIMINO* tetrimino, bool canMoveDown[], int* countFalling);
+void ReflectTetrimino(TETRIMINO* tetrimino, int moveYtoCentral, int moveXtoCentral);
 
 
 ////////////////////////////////////////
@@ -73,17 +76,10 @@ void SelectTetrimino(void) {
 	HoldTetrimino =  7;
 }
 void ControlTetris(void) {
-	static int EffectRoop = 0;
-	static int CountMoveTime = 0;
-	static int moveYtoCentral = 1;
-	static int moveXtoCentral = 2;
-	static bool isCreated = true;
+	static int EffectRoop = 0, CountMoveTime = 0, moveYtoCentral = 1, moveXtoCentral = 2, BlockColorSelector = 0;
+	static bool isCreated = true, SetDown = false, canHold = false, OnlyOnceHold = true;
 	static bool canMoveDown[4] = { false,false,false,false };
-	static bool SetDown = false;
 	static bool canRotate[16] = { false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false };
-	static bool canHold = false;
-	static bool OnlyOnceHold = true;
-	static int BlockColorSelector = 0;
 
 	TETRIMINO tetrimino[8]{
 	{ -1,0,  0,0,  1,0,  2,0, BlockColorSelector },		//テトリミノI　
@@ -143,103 +139,16 @@ void ControlTetris(void) {
 		static int countFalling = 0;
 		countFalling++;
 		if (countFalling >= 50) {
-			if (TetrisField[MovingTetrimino.y1 + moveY + 1][MovingTetrimino.x1 + moveX] == 0 ||
-				TetrisField[MovingTetrimino.y1 + moveY + 1][MovingTetrimino.x1 + moveX] == tetrimino[CurrentTetrimino].color) {
-				canMoveDown[0] = true;
-			}
-			else {
-				canMoveDown[0] = false;
-			}
-			if (TetrisField[MovingTetrimino.y2 + moveY + 1][MovingTetrimino.x2 + moveX] == 0 ||
-				TetrisField[MovingTetrimino.y2 + moveY + 1][MovingTetrimino.x2 + moveX] == tetrimino[CurrentTetrimino].color) {
-				canMoveDown[1] = true;
-			}
-			else {
-				canMoveDown[1] = false;
-			}
-			if (TetrisField[MovingTetrimino.y3 + moveY + 1][MovingTetrimino.x3 + moveX] == 0 ||
-				TetrisField[MovingTetrimino.y3 + moveY + 1][MovingTetrimino.x3 + moveX] == tetrimino[CurrentTetrimino].color) {
-				canMoveDown[2] = true;
-			}
-			else {
-				canMoveDown[2] = false;
-			}
-			if (TetrisField[MovingTetrimino.y4 + moveY + 1][MovingTetrimino.x4 + moveX] == 0 ||
-				TetrisField[MovingTetrimino.y4 + moveY + 1][MovingTetrimino.x4 + moveX] == tetrimino[CurrentTetrimino].color) {
-				canMoveDown[3] = true;
-			}
-			else {
-				canMoveDown[3] = false;
-			}
-
-
-			if (canMoveDown[0] == true &&
-				canMoveDown[1] == true &&
-				canMoveDown[2] == true &&
-				canMoveDown[3] == true) {
-
-				TetrisField[MovingTetrimino.y1 + moveY][MovingTetrimino.x1 + moveX] = 0;
-				TetrisField[MovingTetrimino.y2 + moveY][MovingTetrimino.x2 + moveX] = 0;
-				TetrisField[MovingTetrimino.y3 + moveY][MovingTetrimino.x3 + moveX] = 0;
-				TetrisField[MovingTetrimino.y4 + moveY][MovingTetrimino.x4 + moveX] = 0;
-
-				moveY += 1;
-
-				TetrisField[MovingTetrimino.y1 + moveY][MovingTetrimino.x1 + moveX] = tetrimino[CurrentTetrimino].color;
-				TetrisField[MovingTetrimino.y2 + moveY][MovingTetrimino.x2 + moveX] = tetrimino[CurrentTetrimino].color;
-				TetrisField[MovingTetrimino.y3 + moveY][MovingTetrimino.x3 + moveX] = tetrimino[CurrentTetrimino].color;
-				TetrisField[MovingTetrimino.y4 + moveY][MovingTetrimino.x4 + moveX] = tetrimino[CurrentTetrimino].color;
-				countFalling = 0;
-			}
+			FalingTetrimino(tetrimino,canMoveDown,&countFalling);
 		}
 		if (!SetDown) {
-			TetrisField[MovingTetrimino.y1 + moveY][MovingTetrimino.x1 + moveX] = tetrimino[CurrentTetrimino].color;
-			TetrisField[MovingTetrimino.y2 + moveY][MovingTetrimino.x2 + moveX] = tetrimino[CurrentTetrimino].color;
-			TetrisField[MovingTetrimino.y3 + moveY][MovingTetrimino.x3 + moveX] = tetrimino[CurrentTetrimino].color;
-			TetrisField[MovingTetrimino.y4 + moveY][MovingTetrimino.x4 + moveX] = tetrimino[CurrentTetrimino].color;
-			//
-			HoldBoard[tetrimino[HoldTetrimino].y1 + moveYtoCentral][tetrimino[HoldTetrimino].x1 + moveXtoCentral] = tetrimino[HoldTetrimino].color;
-			HoldBoard[tetrimino[HoldTetrimino].y2 + moveYtoCentral][tetrimino[HoldTetrimino].x2 + moveXtoCentral] = tetrimino[HoldTetrimino].color;
-			HoldBoard[tetrimino[HoldTetrimino].y3 + moveYtoCentral][tetrimino[HoldTetrimino].x3 + moveXtoCentral] = tetrimino[HoldTetrimino].color;
-			HoldBoard[tetrimino[HoldTetrimino].y4 + moveYtoCentral][tetrimino[HoldTetrimino].x4 + moveXtoCentral] = tetrimino[HoldTetrimino].color;
-
-			NextBoard[tetrimino[TetriminoNext[0]].y1 + moveYtoCentral][tetrimino[TetriminoNext[0]].x1 + moveXtoCentral] = tetrimino[TetriminoNext[0]].color;
-			NextBoard[tetrimino[TetriminoNext[0]].y2 + moveYtoCentral][tetrimino[TetriminoNext[0]].x2 + moveXtoCentral] = tetrimino[TetriminoNext[0]].color;
-			NextBoard[tetrimino[TetriminoNext[0]].y3 + moveYtoCentral][tetrimino[TetriminoNext[0]].x3 + moveXtoCentral] = tetrimino[TetriminoNext[0]].color;
-			NextBoard[tetrimino[TetriminoNext[0]].y4 + moveYtoCentral][tetrimino[TetriminoNext[0]].x4 + moveXtoCentral] = tetrimino[TetriminoNext[0]].color;
-
-			NextBoard2[tetrimino[TetriminoNext[1]].y1 + moveYtoCentral][tetrimino[TetriminoNext[1]].x1 + moveXtoCentral] = tetrimino[TetriminoNext[1]].color;
-			NextBoard2[tetrimino[TetriminoNext[1]].y2 + moveYtoCentral][tetrimino[TetriminoNext[1]].x2 + moveXtoCentral] = tetrimino[TetriminoNext[1]].color;
-			NextBoard2[tetrimino[TetriminoNext[1]].y3 + moveYtoCentral][tetrimino[TetriminoNext[1]].x3 + moveXtoCentral] = tetrimino[TetriminoNext[1]].color;
-			NextBoard2[tetrimino[TetriminoNext[1]].y4 + moveYtoCentral][tetrimino[TetriminoNext[1]].x4 + moveXtoCentral] = tetrimino[TetriminoNext[1]].color;
-
-			NextBoard3[tetrimino[TetriminoNext[2]].y1 + moveYtoCentral][tetrimino[TetriminoNext[2]].x1 + moveXtoCentral] = tetrimino[TetriminoNext[2]].color;
-			NextBoard3[tetrimino[TetriminoNext[2]].y2 + moveYtoCentral][tetrimino[TetriminoNext[2]].x2 + moveXtoCentral] = tetrimino[TetriminoNext[2]].color;
-			NextBoard3[tetrimino[TetriminoNext[2]].y3 + moveYtoCentral][tetrimino[TetriminoNext[2]].x3 + moveXtoCentral] = tetrimino[TetriminoNext[2]].color;
-			NextBoard3[tetrimino[TetriminoNext[2]].y4 + moveYtoCentral][tetrimino[TetriminoNext[2]].x4 + moveXtoCentral] = tetrimino[TetriminoNext[2]].color;
+			ReflectTetrimino(tetrimino,moveYtoCentral,moveXtoCentral);
 		}
 	}
 	//テトリミノが着地したかどうか
-	if (((!canMoveDown[0] )||(!canMoveDown[1] )||(!canMoveDown[2] )||(!canMoveDown[3]))&&(!SetDown))
-	{
-		SetDown = true;
-
-		TetrisField[MovingTetrimino.y1 + moveY][MovingTetrimino.x1 + moveX] = tetrimino[CurrentTetrimino].color + 10;
-		TetrisField[MovingTetrimino.y2 + moveY][MovingTetrimino.x2 + moveX] = tetrimino[CurrentTetrimino].color + 10;
-		TetrisField[MovingTetrimino.y3 + moveY][MovingTetrimino.x3 + moveX] = tetrimino[CurrentTetrimino].color + 10;
-		TetrisField[MovingTetrimino.y4 + moveY][MovingTetrimino.x4 + moveX] = tetrimino[CurrentTetrimino].color + 10;
-
-		tetrimino[CurrentTetrimino].color = 0;
-
-		isDrop = false;
-		isRotateL = false;
-		isRotateR = false;
-		isDown = false;
-		isLeft = false;
-		isRight = false;
-		memset(canMoveDown,true,4);
+	if (((!canMoveDown[0]) || (!canMoveDown[1]) || (!canMoveDown[2]) || (!canMoveDown[3])) && (!SetDown)){
+		SetdownCheck(tetrimino, canMoveDown, &SetDown);
 	}
-
 	if (!ChainEffectOn) {
 		g_RiseCOUNTER = 0;
 	}
@@ -1254,5 +1163,101 @@ void ChoseTetrimino(int* CountMoveTime, TETRIMINO* tetrimino, TETRIMINO* RotedBu
 		canMoveDown[3] = true;
 
 	}
+
+}
+void SetdownCheck(TETRIMINO* tetrimino, bool canMoveDown[], bool* SetDown) {
+	*SetDown = true;
+
+	TetrisField[MovingTetrimino.y1 + moveY][MovingTetrimino.x1 + moveX] = tetrimino[CurrentTetrimino].color + 10;
+	TetrisField[MovingTetrimino.y2 + moveY][MovingTetrimino.x2 + moveX] = tetrimino[CurrentTetrimino].color + 10;
+	TetrisField[MovingTetrimino.y3 + moveY][MovingTetrimino.x3 + moveX] = tetrimino[CurrentTetrimino].color + 10;
+	TetrisField[MovingTetrimino.y4 + moveY][MovingTetrimino.x4 + moveX] = tetrimino[CurrentTetrimino].color + 10;
+
+	tetrimino[CurrentTetrimino].color = 0;
+
+	isDrop = false;
+	isRotateL = false;
+	isRotateR = false;
+	isDown = false;
+	isLeft = false;
+	isRight = false;
+	memset(canMoveDown, true, 4);
+}
+void FalingTetrimino(TETRIMINO* tetrimino, bool canMoveDown[],int* countFalling) {
+	if (TetrisField[MovingTetrimino.y1 + moveY + 1][MovingTetrimino.x1 + moveX] == 0 ||
+		TetrisField[MovingTetrimino.y1 + moveY + 1][MovingTetrimino.x1 + moveX] == tetrimino[CurrentTetrimino].color) {
+		canMoveDown[0] = true;
+	}
+	else {
+		canMoveDown[0] = false;
+	}
+	if (TetrisField[MovingTetrimino.y2 + moveY + 1][MovingTetrimino.x2 + moveX] == 0 ||
+		TetrisField[MovingTetrimino.y2 + moveY + 1][MovingTetrimino.x2 + moveX] == tetrimino[CurrentTetrimino].color) {
+		canMoveDown[1] = true;
+	}
+	else {
+		canMoveDown[1] = false;
+	}
+	if (TetrisField[MovingTetrimino.y3 + moveY + 1][MovingTetrimino.x3 + moveX] == 0 ||
+		TetrisField[MovingTetrimino.y3 + moveY + 1][MovingTetrimino.x3 + moveX] == tetrimino[CurrentTetrimino].color) {
+		canMoveDown[2] = true;
+	}
+	else {
+		canMoveDown[2] = false;
+	}
+	if (TetrisField[MovingTetrimino.y4 + moveY + 1][MovingTetrimino.x4 + moveX] == 0 ||
+		TetrisField[MovingTetrimino.y4 + moveY + 1][MovingTetrimino.x4 + moveX] == tetrimino[CurrentTetrimino].color) {
+		canMoveDown[3] = true;
+	}
+	else {
+		canMoveDown[3] = false;
+	}
+
+
+	if (canMoveDown[0] == true &&
+		canMoveDown[1] == true &&
+		canMoveDown[2] == true &&
+		canMoveDown[3] == true) {
+
+		TetrisField[MovingTetrimino.y1 + moveY][MovingTetrimino.x1 + moveX] = 0;
+		TetrisField[MovingTetrimino.y2 + moveY][MovingTetrimino.x2 + moveX] = 0;
+		TetrisField[MovingTetrimino.y3 + moveY][MovingTetrimino.x3 + moveX] = 0;
+		TetrisField[MovingTetrimino.y4 + moveY][MovingTetrimino.x4 + moveX] = 0;
+
+		moveY += 1;
+
+		TetrisField[MovingTetrimino.y1 + moveY][MovingTetrimino.x1 + moveX] = tetrimino[CurrentTetrimino].color;
+		TetrisField[MovingTetrimino.y2 + moveY][MovingTetrimino.x2 + moveX] = tetrimino[CurrentTetrimino].color;
+		TetrisField[MovingTetrimino.y3 + moveY][MovingTetrimino.x3 + moveX] = tetrimino[CurrentTetrimino].color;
+		TetrisField[MovingTetrimino.y4 + moveY][MovingTetrimino.x4 + moveX] = tetrimino[CurrentTetrimino].color;
+		*countFalling = 0;
+	}
+
+}
+void ReflectTetrimino(TETRIMINO* tetrimino, int moveYtoCentral,int moveXtoCentral) {
+	TetrisField[MovingTetrimino.y1 + moveY][MovingTetrimino.x1 + moveX] = tetrimino[CurrentTetrimino].color;
+	TetrisField[MovingTetrimino.y2 + moveY][MovingTetrimino.x2 + moveX] = tetrimino[CurrentTetrimino].color;
+	TetrisField[MovingTetrimino.y3 + moveY][MovingTetrimino.x3 + moveX] = tetrimino[CurrentTetrimino].color;
+	TetrisField[MovingTetrimino.y4 + moveY][MovingTetrimino.x4 + moveX] = tetrimino[CurrentTetrimino].color;
+	//
+	HoldBoard[tetrimino[HoldTetrimino].y1 + moveYtoCentral][tetrimino[HoldTetrimino].x1 + moveXtoCentral] = tetrimino[HoldTetrimino].color;
+	HoldBoard[tetrimino[HoldTetrimino].y2 + moveYtoCentral][tetrimino[HoldTetrimino].x2 + moveXtoCentral] = tetrimino[HoldTetrimino].color;
+	HoldBoard[tetrimino[HoldTetrimino].y3 + moveYtoCentral][tetrimino[HoldTetrimino].x3 + moveXtoCentral] = tetrimino[HoldTetrimino].color;
+	HoldBoard[tetrimino[HoldTetrimino].y4 + moveYtoCentral][tetrimino[HoldTetrimino].x4 + moveXtoCentral] = tetrimino[HoldTetrimino].color;
+
+	NextBoard[tetrimino[TetriminoNext[0]].y1 + moveYtoCentral][tetrimino[TetriminoNext[0]].x1 + moveXtoCentral] = tetrimino[TetriminoNext[0]].color;
+	NextBoard[tetrimino[TetriminoNext[0]].y2 + moveYtoCentral][tetrimino[TetriminoNext[0]].x2 + moveXtoCentral] = tetrimino[TetriminoNext[0]].color;
+	NextBoard[tetrimino[TetriminoNext[0]].y3 + moveYtoCentral][tetrimino[TetriminoNext[0]].x3 + moveXtoCentral] = tetrimino[TetriminoNext[0]].color;
+	NextBoard[tetrimino[TetriminoNext[0]].y4 + moveYtoCentral][tetrimino[TetriminoNext[0]].x4 + moveXtoCentral] = tetrimino[TetriminoNext[0]].color;
+
+	NextBoard2[tetrimino[TetriminoNext[1]].y1 + moveYtoCentral][tetrimino[TetriminoNext[1]].x1 + moveXtoCentral] = tetrimino[TetriminoNext[1]].color;
+	NextBoard2[tetrimino[TetriminoNext[1]].y2 + moveYtoCentral][tetrimino[TetriminoNext[1]].x2 + moveXtoCentral] = tetrimino[TetriminoNext[1]].color;
+	NextBoard2[tetrimino[TetriminoNext[1]].y3 + moveYtoCentral][tetrimino[TetriminoNext[1]].x3 + moveXtoCentral] = tetrimino[TetriminoNext[1]].color;
+	NextBoard2[tetrimino[TetriminoNext[1]].y4 + moveYtoCentral][tetrimino[TetriminoNext[1]].x4 + moveXtoCentral] = tetrimino[TetriminoNext[1]].color;
+
+	NextBoard3[tetrimino[TetriminoNext[2]].y1 + moveYtoCentral][tetrimino[TetriminoNext[2]].x1 + moveXtoCentral] = tetrimino[TetriminoNext[2]].color;
+	NextBoard3[tetrimino[TetriminoNext[2]].y2 + moveYtoCentral][tetrimino[TetriminoNext[2]].x2 + moveXtoCentral] = tetrimino[TetriminoNext[2]].color;
+	NextBoard3[tetrimino[TetriminoNext[2]].y3 + moveYtoCentral][tetrimino[TetriminoNext[2]].x3 + moveXtoCentral] = tetrimino[TetriminoNext[2]].color;
+	NextBoard3[tetrimino[TetriminoNext[2]].y4 + moveYtoCentral][tetrimino[TetriminoNext[2]].x4 + moveXtoCentral] = tetrimino[TetriminoNext[2]].color;
 
 }

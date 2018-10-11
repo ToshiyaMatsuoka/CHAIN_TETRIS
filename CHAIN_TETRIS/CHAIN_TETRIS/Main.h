@@ -56,7 +56,7 @@
 #define EFFECTTIME 45
 #define SWITCH_RESULT 80
 //キー入力制限
-#define CREATE_INTERVAL 5
+#define CREATE_INTERVAL 4
 #define MOVING_COUNTER 10
 #define KEY_RESTAIN 5
 //タイトルロゴ落下量
