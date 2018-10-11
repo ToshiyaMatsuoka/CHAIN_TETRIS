@@ -77,9 +77,6 @@
     <ClInclude Include="Tutorial.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="resource1.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Texture\CHAIN_TETRIS_Icon.ico">

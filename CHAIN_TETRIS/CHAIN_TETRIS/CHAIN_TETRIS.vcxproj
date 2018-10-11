@@ -142,7 +142,6 @@
     <ClInclude Include="Main.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="resource1.h" />
     <ClInclude Include="teamlogo.h" />
     <ClInclude Include="TetriminoState.h" />
     <ClInclude Include="TetrisEffect.h" />

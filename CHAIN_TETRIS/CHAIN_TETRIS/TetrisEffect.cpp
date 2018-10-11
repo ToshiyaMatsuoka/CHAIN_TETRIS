@@ -122,7 +122,7 @@ void chain(int field[FIELD_HEIGHT][FIELD_WIDTH],int chainHeight, int BuffChainCh
 			//Á‹Ž—ñ‚©‚ç2’i‚ð’´‚¦‚½‚ç“¯F‚ðÁ‚µ‚Ä‚¢‚­
 			if ((field[UpperCheck][ChainCheckCnt] - BuffChainbuffer[ChainCheckCnt - 1] == 1
 				|| field[UpperCheck][ChainCheckCnt] - BuffChainbuffer[ChainCheckCnt - 1] == -3
-				|| field[UpperCheck][ChainCheckCnt] == BuffChainbuffer[ChainCheckCnt - 1]) && (chainHeight - UpperCheck> 2) && field[UpperCheck-1][ChainCheckCnt]==6) {
+				|| field[UpperCheck][ChainCheckCnt] == BuffChainbuffer[ChainCheckCnt - 1]) && (chainHeight - UpperCheck> 2) && (field[UpperCheck-1][ChainCheckCnt] == 6)) {
 				BuffChainbuffer[ChainCheckCnt - 1] = field[UpperCheck][ChainCheckCnt];
 				field[UpperCheck][ChainCheckCnt] = 6;
 				HorizontalCheck = true;
