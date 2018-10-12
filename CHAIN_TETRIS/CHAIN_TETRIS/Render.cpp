@@ -16,7 +16,6 @@
 #define CYAN 0xff00ffff
 #define ORANGE 0xffffa500
 #define BLACK 0x60000000
-#define WHITE 0x00ffffff
 #define INVISIBLE 0x00ffffff
 #define BASEED 0xffffffff
 //フィールド左端
@@ -450,7 +449,7 @@ void SetBoardTextureID(int Board,int i,int j,TEXTURE* textureID) {
 	case 8:
 	case 10:
 		*textureID = UNITS_TEX;
-		BlockColor = WHITE;
+		BlockColor = INVISIBLE;
 		break;
 	default:
 		*textureID = UNITS_TEX;
@@ -503,7 +502,7 @@ void SetFieldTextureID(int Board, int i, int j, TEXTURE* textureID) {
 	case 8:
 	case 10:
 		*textureID = UNITS_TEX;
-		BlockColor = WHITE;
+		BlockColor = INVISIBLE;
 		break;
 	default:
 		*textureID = UNITS_TEX;
