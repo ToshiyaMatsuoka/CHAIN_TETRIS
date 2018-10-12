@@ -273,8 +273,7 @@ void tetriminoSetDown(bool* SetDown, bool* isCreated, bool* OnlyOnceHold, int* E
 void ChainProcessing(int* chainHeight, int ChainCheck[], int* RisenCount,bool* ChainEffectOn) {
 	bool isup = false;
 	int chainbuffer[10];
-
-
+	
 	for (int ChainCheckCnt = 10; ChainCheckCnt > 0; ChainCheckCnt--) {
 		if ((TetrisField[*chainHeight][ChainCheckCnt] - ChainCheck[ChainCheckCnt - 1] == 1)
 			|| (TetrisField[*chainHeight][ChainCheckCnt] - ChainCheck[ChainCheckCnt - 1] == -3)) {
@@ -294,7 +293,6 @@ void ChainProcessing(int* chainHeight, int ChainCheck[], int* RisenCount,bool* C
 		for (int UpperCheck = *chainHeight; UpperCheck > 0; UpperCheck--) {
 			if ((TetrisField[UpperCheck][ChainCheckCnt] - chainbuffer[ChainCheckCnt - 1] == 1
 				|| TetrisField[UpperCheck][ChainCheckCnt] - chainbuffer[ChainCheckCnt - 1] == -3)) {
-
 				if ((*chainHeight - UpperCheck > 2) && (TetrisField[UpperCheck][ChainCheckCnt] == chainbuffer[ChainCheckCnt - 1])) {
 					isup = true;
 					(*RisenCount)++;
@@ -310,14 +308,11 @@ void ChainProcessing(int* chainHeight, int ChainCheck[], int* RisenCount,bool* C
 					(*RisenCount)++;
 					UpperCheck++;
 					chainbuffer[ChainCheckCnt - 1] = TetrisField[*chainHeight][ChainCheckCnt];
-
 					for (int checkup = *chainHeight; checkup > 0; checkup--) {
 						TetrisField[checkup][ChainCheckCnt] = TetrisField[checkup - 1][ChainCheckCnt];
 					}
 					TetrisField[0][ChainCheckCnt] = 0;
-
 				}
-
 				//‰¡‚ÌŠm”F
 				//	—ñ‚©‚ç3’i–ÚˆÈã‚È‚ç‚Î‰¡‚àŒ©‚é
 				if (*chainHeight - UpperCheck > 2) {

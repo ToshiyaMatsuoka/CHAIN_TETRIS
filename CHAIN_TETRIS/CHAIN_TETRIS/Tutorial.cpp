@@ -115,10 +115,8 @@ void TutorialControl(){
 *描画処理
 */
 void TutorialRender(void){
-	//チェック画像のy軸それぞれの設定の初期化
 
 	//頂点情報を入れる--------------------------------------
-
 	CUSTOMVERTEX tutorial_bg[4]
 	{
 	{ 0.f,   0.f, 1.f,1.f, 0xFFFFFFFF, 0.f, 0.f },
