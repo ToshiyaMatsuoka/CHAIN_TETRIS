@@ -81,15 +81,15 @@ void chain(int field[FIELD_HEIGHT][FIELD_WIDTH],int chainHeight, int BuffChainCh
 			if (!BuffChainbuffer[ChainCheckCnt - 1]) {
 				continue;
 			}
+			if( (chainHeight - UpperCheck) <= 2 && (field[UpperCheck][ChainCheckCnt] != BuffChainbuffer[ChainCheckCnt - 1])) {
+				BuffChainbuffer[ChainCheckCnt - 1] = field[UpperCheck][ChainCheckCnt];
+				field[UpperCheck][ChainCheckCnt] = 6;
+			}
 			//消去列から2段を超えたら同色を消していく
-			if ( ((chainHeight - UpperCheck) > 2) && (field[UpperCheck-1][ChainCheckCnt] == 6)) {
+			else if ( ((chainHeight - UpperCheck) > 2) && (field[UpperCheck-1][ChainCheckCnt] == 6) ) {
 				BuffChainbuffer[ChainCheckCnt - 1] = field[UpperCheck][ChainCheckCnt];
 				field[UpperCheck][ChainCheckCnt] = 6;
 				HorizontalCheck = true;
-			}
-			if((chainHeight - UpperCheck) <= 2) {
-				BuffChainbuffer[ChainCheckCnt - 1] = field[UpperCheck][ChainCheckCnt];
-				field[UpperCheck][ChainCheckCnt] = 6;
 			}
 			//横の確認
 			if (HorizontalCheck) {
