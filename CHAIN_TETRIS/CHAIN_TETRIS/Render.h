@@ -25,8 +25,8 @@ extern TEXTURE_STATE g_Girl;
 
 extern int g_scene;
 void Render(void);
-void DrowTexture(CUSTOMVERTEX vertex[4], int textureNumber);
-void DrowWord(RECT rect, LPCSTR text, int FontNumber, int textformat = DT_LEFT, DWORD color = 0xffffffff);
+void DrowTexture(CUSTOMVERTEX vertex[4], string textureNumber);
+void DrowWord(RECT rect, LPCSTR text, string FontNumber, int textformat = DT_LEFT, DWORD color = 0xffffffff);
 
 #endif // !RENDER_H
 

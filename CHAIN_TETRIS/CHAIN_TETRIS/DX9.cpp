@@ -35,14 +35,11 @@ HRESULT InitD3d(HWND hWnd)
 	//「テクスチャオブジェクト」の作成
 	if (FAILED(D3DXCreateTextureFromFileEx(g_pD3Device, "Texture/bg_main.png", 100, 100, 0, 0, D3DFMT_UNKNOWN,
 		D3DPOOL_DEFAULT, D3DX_FILTER_NONE, D3DX_DEFAULT,
-		0xff000000, NULL, NULL, &g_pTexture[TEXMAX])))
+		0xff000000, NULL, NULL, &g_pTexture["Test"])))
 	{
 		MessageBox(0, "テクスチャの作成に失敗しました", "", MB_OK);
 		return E_FAIL;
 	}
-
-	
-
 	return S_OK;
 }
 
@@ -153,4 +150,53 @@ void CheckButtonState(WORD buttomID, int buttomindex)
 		PadOldState[buttomindex] = PadOff;
 	}
 
+}
+
+void BuildDXDevice() {
+	//ダイレクト３Dの初期化関数を呼ぶ
+	if (FAILED(InitD3d(hWnd)))
+	{
+		return;
+	}
+	//ダイレクトインプットの初期化関数を呼ぶ
+	if (FAILED(InitDinput(hWnd)))
+	{
+		return;
+	}
+
+	//DirectX オブジェクトの生成
+	g_pDirect3D = Direct3DCreate9(
+		D3D_SDK_VERSION);
+
+	//成功チェック
+	if (g_pDirect3D == NULL)
+	{
+		//生成に失敗したら終了する
+		return;
+	}
+	g_D3dPresentParameters = (WinMode) ? d3dppWin : d3dppFull;
+	g_pDirect3D->CreateDevice(
+		D3DADAPTER_DEFAULT,
+		D3DDEVTYPE_HAL,
+		hWnd,
+		D3DCREATE_HARDWARE_VERTEXPROCESSING,
+		&g_D3dPresentParameters, &g_pD3Device);
+	//生成チェック
+	if (g_pD3Device == NULL)
+	{
+		//生成に失敗したらDirectXオブジェクトを開放して終了する
+		g_pDirect3D->Release();
+		return;
+	}
+	//描画設定
+	g_pD3Device->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+	g_pD3Device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);  //SRCの設定
+	g_pD3Device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	g_pD3Device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+	g_pD3Device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+	g_pD3Device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+	g_pD3Device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+	//g_pD3Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+	//頂点に入れるデータを設定
+	g_pD3Device->SetFVF(D3DFVF_CUSTOMVERTEX);
 }

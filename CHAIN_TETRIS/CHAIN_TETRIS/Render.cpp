@@ -33,15 +33,15 @@ static char debug[512]{'\0'};
 
 int g_scene = 0;
 void ResultRender(void);
-void SetBoardTextureID(int Board, int i, int j, TEXTURE* textureID);
-void SetFieldTextureID(int Board, int i, int j, TEXTURE* textureID);
+void SetBoardTextureID(int Board, int i, int j, string* textureID);
+void SetFieldTextureID(int Board, int i, int j, string* textureID);
 
 /**
 *描画処理
 */
 void Render() {
 	
-	TEXTURE textureID =BLOCK_BRUNK_TEX;
+	string textureID ="BLOCK_BRUNK_TEX";
 	//-----------------------------------------------------
 	//頂点情報を入れる--------------------------------------	
 	CUSTOMVERTEX backGround[4]
@@ -101,16 +101,16 @@ void Render() {
 
 	if (g_scene == STATE_TITLE)
 	{
-		DrowTexture(backGround, BG_MAIN_TEX);
+		DrowTexture(backGround, "BG_MAIN_TEX");
 
 		LogoControl();
 
-		DrowTexture(logo, LOGO_TEX);
+		DrowTexture(logo, "LOGO_TEX");
 
 		static int count = 0;
 		count++;
 		if (count > 30){
-			DrowTexture(start, START_TEX);
+			DrowTexture(start, "START_TEX");
 			if (count == 60){
 				count = 0;
 			}
@@ -124,8 +124,8 @@ if (g_scene == STATE_RESULT){
 
 if (g_scene == STATE_MAIN) {
 	//背景設置
-	DrowTexture(backGroundMain, BG_MAIN_TEX);
-	DrowTexture(tetrisStage, STAGE_TEX);
+	DrowTexture(backGroundMain, "BG_MAIN_TEX");
+	DrowTexture(tetrisStage, "STAGE_TEX");
 
 	//PLAYFIELDの設置
 	if (!EffectOn&&!ChainEffectOn) {
@@ -240,9 +240,9 @@ if (g_scene == STATE_MAIN) {
 			DrowTexture(BLOCK04_VTX, textureID);
 		}
 	}
-	DrowTexture(CAHINCOLOR, CHAIN_COLOR_TEX);
+	DrowTexture(CAHINCOLOR, "CHAIN_COLOR_TEX");
 	if (GameStop){
-		DrowTexture(backGroundPause, PAUSE_TEX);
+		DrowTexture(backGroundPause, "PAUSE_TEX");
 	}
 	TEXTWRITTEN();
 }
@@ -272,11 +272,11 @@ void ResultRender(void){
 
 	//-----------------------------------------------------
 	//描画の開始
-	DrowTexture(result, BG_RESULT_TEX);
-	DrowTexture(resultgirl, RESULTGIRL_TEX);
+	DrowTexture(result, "BG_RESULT_TEX");
+	DrowTexture(resultgirl, "RESULTGIRL_TEX");
 	char Score[255];
 	sprintf_s(Score, 255, "%d", NowScorePoint);
-	DrowWord(ResultScore, Score, ResultScore_FONT, DT_CENTER,D3DCOLOR_ARGB(0xff, 0xff, 0x00, 0x00));
+	DrowWord(ResultScore, Score, "ResultScore_FONT", DT_CENTER,D3DCOLOR_ARGB(0xff, 0xff, 0x00, 0x00));
 }
 void TEXTWRITTEN() {
 	char Score[255];
@@ -346,23 +346,23 @@ void TEXTWRITTEN() {
 		600		// 右下のy座標
 	};
 
-	DrowWord(HOLDBOARD, ("HOLD"), SUBBOARD_FONT);
-	DrowWord(NEXTBOARD, ("NEXT"), SUBBOARD_FONT);
-	DrowWord(NEXT2BOARD, ("Second"), SUBBOARD_FONT);
-	DrowWord(NEXT3BOARD, ("Third"), SUBBOARD_FONT);
-	DrowWord(SCOREBOARD, ("SCORE"), SUBBOARD_FONT);
-	DrowWord(DrawnSCORE, Score, Score_FONT, DT_RIGHT);
+	DrowWord(HOLDBOARD, ("HOLD"), "SUBBOARD_FONT");
+	DrowWord(NEXTBOARD, ("NEXT"), "SUBBOARD_FONT");
+	DrowWord(NEXT2BOARD, ("Second"), "SUBBOARD_FONT");
+	DrowWord(NEXT3BOARD, ("Third"), "SUBBOARD_FONT");
+	DrowWord(SCOREBOARD, ("SCORE"), "SUBBOARD_FONT");
+	DrowWord(DrawnSCORE, Score, "Score_FONT", DT_RIGHT);
 	if (GameStop)
 	{
-		DrowWord(DrawnPAUSE, ("PAUSE"), PAUSE_FONT, DT_LEFT);
-		DrowWord(DrawnPAUSE_B, ("PUSH Enter or Start"), PAUSE2_FONT, DT_LEFT);
+		DrowWord(DrawnPAUSE, ("PAUSE"), "PAUSE_FONT", DT_LEFT);
+		DrowWord(DrawnPAUSE_B, ("PUSH Enter or Start"), "PAUSE2_FONT", DT_LEFT);
 	}
 
 	if (GameOver) {
-		DrowWord(GAMEOVER,("GAME OVER"), GO_FONT, DT_CENTER, D3DCOLOR_ARGB(0xff, 0xff, 0x00, 0x00));
+		DrowWord(GAMEOVER,("GAME OVER"), "GO_FONT", DT_CENTER, D3DCOLOR_ARGB(0xff, 0xff, 0x00, 0x00));
 	}
 	if (g_RiseCOUNTER&&ChainEffectOn) {
-		DrowWord(GAMEOVER, chaincnt,GO_FONT, DT_CENTER, D3DCOLOR_ARGB(0xff, 0xff, 0x00, 0x00));
+		DrowWord(GAMEOVER, chaincnt,"GO_FONT", DT_CENTER, D3DCOLOR_ARGB(0xff, 0xff, 0x00, 0x00));
 	}
 #ifdef _DEBUG
 	float PutDebugX = 0;
@@ -378,7 +378,7 @@ void TEXTWRITTEN() {
 				1200,	// 右下のx座標
 				700		// 右下のy座標
 			};
-			DrowWord(Debug, debug, SUBBOARD_FONT, DT_LEFT, D3DCOLOR_ARGB(0xff, 0xff, 0x00, 0xff));
+			DrowWord(Debug, debug, "SUBBOARD_FONT", DT_LEFT, D3DCOLOR_ARGB(0xff, 0xff, 0x00, 0xff));
 		}
 	}
 	RECT DebugCHAINCNT{
@@ -387,14 +387,14 @@ void TEXTWRITTEN() {
 	1200,
 	700
 	};
-	DrowWord(DebugCHAINCNT, chaincnt, MAIN_FONT, DT_LEFT, D3DCOLOR_ARGB(0xff, 0x5f, 0x5f, 0x5f));
+	DrowWord(DebugCHAINCNT, chaincnt, "MAIN_FONT", DT_LEFT, D3DCOLOR_ARGB(0xff, 0x5f, 0x5f, 0x5f));
 #endif // DEBUG
 }
-void DrowTexture(CUSTOMVERTEX vertex[4],int textureNumber) {
+void DrowTexture(CUSTOMVERTEX vertex[4], string textureNumber) {
 	g_pD3Device->SetTexture(0, g_pTexture[textureNumber]);
 	g_pD3Device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertex, sizeof(CUSTOMVERTEX));
 }
-void DrowWord(RECT rect,LPCSTR text,int FontNumber,int TextFormat,DWORD color) {
+void DrowWord(RECT rect,LPCSTR text, string FontNumber,int TextFormat,DWORD color) {
 	g_pFont[FontNumber]->DrawText(
 		NULL,		// NULL
 		text,		// 描画テキスト
@@ -404,108 +404,108 @@ void DrowWord(RECT rect,LPCSTR text,int FontNumber,int TextFormat,DWORD color) {
 		color		// color
 	);
 }
-void SetBoardTextureID(int Board,int i,int j,TEXTURE* textureID) {
+void SetBoardTextureID(int Board,int i,int j, string* textureID) {
 	switch (Board)
 	{
 	case 0:
-		*textureID = BORD_TEX;
+		*textureID = "BORD_TEX";
 		BlockColor = BLACK;
 		break;
 	case 1:
 	case 11:
-		*textureID = BLOCK_BRUNK_TEX;
+		*textureID = "BLOCK_BRUNK_TEX";
 		BlockColor = BASEED;
 		break;
 	case 2:
 	case 12:
-		*textureID = BLOCK_BRUNK_TEX;
+		*textureID = "BLOCK_BRUNK_TEX";
 		BlockColor = BASEED;
 		break;
 	case 3:
 	case 13:
-		*textureID = BLOCK_BRUNK_TEX;
+		*textureID = "BLOCK_BRUNK_TEX";
 		BlockColor = BASEED;
 		break;
 	case 4:
 	case 14:
-		*textureID = BLOCK_BRUNK_TEX;
+		*textureID = "BLOCK_BRUNK_TEX";
 		BlockColor = BASEED;
 		break;
 	case 5:
 	case 15:
-		*textureID = UNITS_TEX;
+		*textureID = "UNITS_TEX";
 		BlockColor = MAGENTA;
 		break;
 	case 6:
 	case 16:
-		*textureID = EFFECT_TEX;
+		*textureID = "EFFECT_TEX";
 		BlockColor = CYAN;
 		break;
 	case 7:
 	case 17:
-		*textureID = UNITS_TEX;
+		*textureID = "UNITS_TEX";
 		BlockColor = ORANGE;
 		break;
 	case 8:
 	case 10:
-		*textureID = UNITS_TEX;
+		*textureID = "UNITS_TEX";
 		BlockColor = INVISIBLE;
 		break;
 	default:
-		*textureID = UNITS_TEX;
+		*textureID = "UNITS_TEX";
 		BlockColor = INVISIBLE;
 		break;
 	}
 }
-void SetFieldTextureID(int Board, int i, int j, TEXTURE* textureID) {
+void SetFieldTextureID(int Board, int i, int j, string* textureID) {
 	switch (Board)
 	{
 	case 0:
-		*textureID = UNITS_TEX;
+		*textureID = "UNITS_TEX";
 		BlockColor = BLACK;
 		break;
 	case 1:
 	case 11:
-		*textureID = BLOCK_RED_TEX;
+		*textureID = "BLOCK_RED_TEX";
 		BlockColor = BASEED;
 		break;
 	case 2:
 	case 12:
-		*textureID = BLOCK_BLUE_TEX;
+		*textureID = "BLOCK_BLUE_TEX";
 		BlockColor = BASEED;
 		break;
 	case 3:
 	case 13:
-		*textureID = BLOCK_GREEN_TEX;
+		*textureID = "BLOCK_GREEN_TEX";
 		BlockColor = BASEED;
 		break;
 	case 4:
 	case 14:
-		*textureID = BLOCK_YELLOW_TEX;
+		*textureID = "BLOCK_YELLOW_TEX";
 		BlockColor = BASEED;
 		break;
 	case 5:
 	case 15:
-		*textureID = UNITS_TEX;
+		*textureID = "UNITS_TEX";
 		BlockColor = MAGENTA;
 		break;
 	case 6:
 	case 16:
-		*textureID = EFFECT_TEX;
+		*textureID = "EFFECT_TEX";
 		BlockColor = CYAN;
 		break;
 	case 7:
 	case 17:
-		*textureID = UNITS_TEX;
+		*textureID = "UNITS_TEX";
 		BlockColor = ORANGE;
 		break;
 	case 8:
 	case 10:
-		*textureID = UNITS_TEX;
+		*textureID = "UNITS_TEX";
 		BlockColor = INVISIBLE;
 		break;
 	default:
-		*textureID = UNITS_TEX;
+		*textureID = "UNITS_TEX";
 		BlockColor = INVISIBLE;
 		break;
 	}

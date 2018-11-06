@@ -163,14 +163,14 @@ void TeamLogoRender(void){
 	g_pD3Device->BeginScene();
 	if (!ScenrEnd){
 		if (teamlogorandam == 1){
-			DrowTexture(TeamLogo1, TEAM_LOGO_TEX);
+			DrowTexture(TeamLogo1, "TEAM_LOGO_TEX");
 		}
 		if (teamlogorandam == 2){
-			DrowTexture(TeamLogo2, TEAM_LOGO_TEX);
+			DrowTexture(TeamLogo2, "TEAM_LOGO_TEX");
 		}
 		if (teamlogorandam == 3){
-			DrowTexture(TeamLogo3, TEAM_LOGO_TEX);
-			DrowTexture(TeamLogo4, TEAM_LOGO_TEX);
+			DrowTexture(TeamLogo3, "TEAM_LOGO_TEX");
+			DrowTexture(TeamLogo4, "TEAM_LOGO_TEX");
 		}
 	}
 	//ï`âÊÇÃèIóπ

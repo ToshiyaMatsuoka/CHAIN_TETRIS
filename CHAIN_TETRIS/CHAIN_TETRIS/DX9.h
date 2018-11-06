@@ -45,4 +45,5 @@ extern PADSTATE PadOldState[buttomindexMAX];
 void CheckButtonState(WORD, int);
 HRESULT InitD3d(HWND hWnd);
 HRESULT InitDinput(HWND hWnd);
+void BuildDXDevice();
 #endif // !RENDER_H

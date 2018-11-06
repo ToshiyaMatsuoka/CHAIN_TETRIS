@@ -181,27 +181,27 @@ void TutorialRender(void){
 	g_pD3Device->Clear(0, NULL,	D3DCLEAR_TARGET,D3DCOLOR_XRGB(0x00, 0x00, 0x00),1.0, 0);
 	//•`‰æ‚ÌŠJŽn
 	g_pD3Device->BeginScene();
-	DrowTexture(tutorial_bg, TUTORIAL_TEX);
+	DrowTexture(tutorial_bg, "TUTORIAL_TEX");
 	if (RIGHT){
-		DrowTexture(rightcheck, CHECK_TEX);
+		DrowTexture(rightcheck, "CHECK_TEX");
 	}
 	if (LEFT){
-		DrowTexture(leftcheck, CHECK_TEX);
+		DrowTexture(leftcheck, "CHECK_TEX");
 	}
 	if (DOWN){
-		DrowTexture(upcheck, CHECK_TEX);
+		DrowTexture(upcheck, "CHECK_TEX");
 	}
 	if (UP){
-		DrowTexture(downcheck, CHECK_TEX);
+		DrowTexture(downcheck, "CHECK_TEX");
 	}
 	if (KEY_Z){
-		DrowTexture(key_zcheck, CHECK_TEX);
+		DrowTexture(key_zcheck, "CHECK_TEX");
 	}
 	if (KEY_C){
-		DrowTexture(key_ccheck, CHECK_TEX);
+		DrowTexture(key_ccheck, "CHECK_TEX");
 	}
 	if (SPACE){
-		DrowTexture(spacecheck, CHECK_TEX);
+		DrowTexture(spacecheck, "CHECK_TEX");
 	}
 	//•`‰æ‚ÌI—¹
 	g_pD3Device->EndScene();
