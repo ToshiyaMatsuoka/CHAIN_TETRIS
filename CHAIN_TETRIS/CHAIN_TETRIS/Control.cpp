@@ -62,13 +62,13 @@ void Control() {
 		isDown = true;
 	}
 
-	if (!PadState[ButtonA]) {
+	if (PadPush == PadState[ButtonA]) {
 		isHold = true;
 	}
-	if (!PadState[ButtonB]) {
+	if (PadPush == PadState[ButtonB]) {
 		isRotateR = true;
 	}
-	if (!PadState[ButtonX]) {
+	if (PadPush == PadState[ButtonX]) {
 		isRotateL = true;
 	}
 	if (PadRelease == PadState[ButtonY]) {

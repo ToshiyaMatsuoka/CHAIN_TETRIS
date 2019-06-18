@@ -24,7 +24,7 @@
 //ブロック
 #define BLOCK_HARFWIDTH 16.f
 
-OBJECT_STATE Block;
+TEXTURE_STATE Block;
 TEXTURE_STATE g_Girl = { 1000.f,450.f,150.f };
 TEXTURE_STATE Logo = { 320.f, -300.f, 100.f };//ロゴマークの初期位置
 void TEXTWRITTEN();
@@ -132,7 +132,7 @@ if (g_scene == STATE_MAIN) {
 		for (int i = 0; i < FIELD_HEIGHT; i++) {
 			for (int j = 0; j < FIELD_WIDTH; j++) {
 				SetFieldTextureID(TetrisField[i][j], i, j, &textureID);
-				OBJECT_STATE Block = { j * (BLOCK_HARFWIDTH * 2) + FieldInitPosX, i * (BLOCK_HARFWIDTH * 2) + FieldInitPosY, BLOCK_HARFWIDTH };
+				TEXTURE_STATE Block = { j * (BLOCK_HARFWIDTH * 2) + FieldInitPosX, i * (BLOCK_HARFWIDTH * 2) + FieldInitPosY, BLOCK_HARFWIDTH };
 				CUSTOMVERTEX BLOCK_VTX[4]
 				{
 				{ Block.x - Block.scale, Block.y - Block.scale, 1.f, 1.f, BlockColor, 0.f, 0.f },
@@ -149,7 +149,7 @@ if (g_scene == STATE_MAIN) {
 		for (int i = 0; i < FIELD_HEIGHT; i++) {
 			for (int j = 0; j < FIELD_WIDTH; j++) {
 				SetFieldTextureID(FieldEffectBuff[i][j], i, j, &textureID);
-				OBJECT_STATE Block = { j * (BLOCK_HARFWIDTH * 2) + FieldInitPosX, i * (BLOCK_HARFWIDTH * 2) + FieldInitPosY, BLOCK_HARFWIDTH };
+				TEXTURE_STATE Block = { j * (BLOCK_HARFWIDTH * 2) + FieldInitPosX, i * (BLOCK_HARFWIDTH * 2) + FieldInitPosY, BLOCK_HARFWIDTH };
 				CUSTOMVERTEX BLOCK_VTX[4]
 				{
 				{ Block.x - Block.scale, Block.y - Block.scale, 1.f, 1.f, BlockColor, 0.f, 0.f },

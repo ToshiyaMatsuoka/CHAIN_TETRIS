@@ -5,10 +5,6 @@
 #define FIELD_HEIGHT	24
 #define FIELD_WIDTH		12
 
-struct OBJECT_STATE
-{
-	float x, y, scale;
-};
 struct TEXTURE_STATE
 {
 	float x, y, scale;
